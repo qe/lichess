@@ -1,6 +1,6 @@
 
 <div align="center">
-  <img src="docs/lichess.svg">
+  <img src="docs/lichess.svg" width="160px" height="160px">
 </div>
 
 <h2 align="center"> lichess: A Python wrapper for the Lichess API</h2>
