@@ -1,11 +1,8 @@
 
-from .utils import *
+# from .utils import *
 import requests
 import urllib
 
-
-# move this import to the format.py eventually
-import json
 
 _ROOT_URL = "https://lichess.org/"
 
@@ -15,7 +12,6 @@ class Client:
         self.url = _ROOT_URL
 
     def request(self, path, post_data=None, params=None, *args, **kwargs):
-        # full_url = self.url + path
         full_url = urllib.parse.urljoin(self.url, path)
 
         # GET method
@@ -26,13 +22,7 @@ class Client:
             print("POST method!!!")
             return
 
-        # <Response [200]>
-        # <Response [404]>
-        print("response: ", response)
-        print("response type: ", type(response))
-        print("response.status_code", response.status_code)
-        print("type(response.status_code)", type(response.status_code))
-        # if response
+        # print("response.status_code", response.status_code)
 
         # remove this below eventually
         # call format.py or formats.py file to convert to JSON
@@ -61,28 +51,19 @@ client = Client()
 
 
 # =========================== Users ===========================
-# ids: List[str]
-def get_status(ids, with_game_ids=False):
+
+def get_status(*users, with_game_ids=False):
     """
     Get real-time users status
 
     :return:
     """
     endpoint = "api/users/status"
-
-    # 1.Check if list   2.Validate params in list of strings   3.Make sure not nested
-    if isinstance(ids, list) and val_liststr(ids) and not_nested(ids):
-        ids_query = "?ids=" + ','.join(ids)
-    else:
-        # WRONG TYPE!!
-        # THROW EXCEPTION
-        print("INVALID!!!!!!")
-
-    # https://lichess.org/api/users/status?ids=ismodes,ItsChika,Durarbayli&withGameIds=true
-    path = endpoint + ids_query
+    path = endpoint + "?ids=" + ','.join(users)
 
     if with_game_ids:
         path += "&withGameIds=true"
+
     return client.get(path=path)
 
 
