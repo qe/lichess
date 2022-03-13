@@ -1,8 +1,7 @@
-<p align="center">
-<a href="https://lichess.org" alt="Lichess Website Link">
-  <img src="./docs/lichess.png" alt="Lichess Logo" width="160px" height="160px">
-</a>
-</p>
+
+<div align="center">
+  <img src=".docs/lichess.png">
+</div>
 
 <h2 align="center"> lichess: A Python wrapper for the Lichess API</h2>
 <p align="center">
