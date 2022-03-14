@@ -1,18 +1,18 @@
 from setuptools import setup
 
-with open("README.md") as f:
+with open("README.rst") as f:
     long_description = f.read()
 
 setup(
     name="lichess",
-    version="0.1.3",
+    version="0.1.4",
     description="Python Lichess API",
     long_description=long_description,
-    long_description_content_type="text/markdown",
+    long_description_content_type="text/x-rst",
     url="https://github.com/qe/lichess",
     author="Alex Ismodes",
     author_email="helloemailmerighthere@gmail.com",
-    install_requires=[""],
+    install_requires=['requests==2.27.1', ],
     license="MIT",
     keywords="lichess chess api wrapper",
     project_urls={

@@ -1,2 +1,1 @@
 from lichess.client import *
-
