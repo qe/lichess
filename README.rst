@@ -28,7 +28,7 @@ lichess: a Python wrapper for the Lichess API
    :target: https://github.com/qe/lichess
    :alt: Total Lines of Code
 
-lichess_ is a Python library for interacting with the Lichess API and can be used to get profile data, game data, and much more.
+lichess_ is a Python library for interacting with the `Lichess API <https://lichess.org/api>`_ and can be used to get profile data, game data, and much more.
 
     **This project is still in Pre-Alpha. As a result, it is still unstable and not all features have been implemented.**
 
