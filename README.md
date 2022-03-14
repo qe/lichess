@@ -3,7 +3,7 @@
   <img src="docs/lichess.svg" width="160px" height="160px">
 </div>
 
-<h2 align="center"> lichess: A Python wrapper for the Lichess API</h2>
+<h2 align="center"> lichess: a Python wrapper for the Lichess API</h2>
 <p align="center">
 <img src="https://img.shields.io/pypi/l/lichess?label=license" alt="License"/>
 <a href="https://pypi.org/project/lichess/"><img alt="PyPI" src="https://img.shields.io/pypi/v/lichess"></a>
