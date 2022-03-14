@@ -56,7 +56,7 @@ Example
 =======
 For the full documentation, please check the `Lichess Python API Documentation <https://lichess.readthedocs.io>`_.
 
-Here's a quick example of what using two of the ____ could look like::
+Here's a quick example of what using two of the functions could look like::
 
     from lichess import get_data, get_status
 
@@ -173,9 +173,7 @@ Warnings
 ========
 **Make sure your inputs are valid.**
 
-For example, if you input an invalid username like::
-
-    "chessbrahs "
+For example, if you input an invalid username, such as ``"chessbrahs "``
 
 It will ignore this input as shown below:
 
