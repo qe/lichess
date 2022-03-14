@@ -30,8 +30,9 @@ lichess: a Python wrapper for the Lichess API
 
 lichess_ is a Python library for interacting with the Lichess API and can be used to get profile data, game data, and much more.
 
-.. note::
-    This project is still in Pre-Alpha. As a result, it is still unstable and not all features have been implemented.
+    **This project is still in Pre-Alpha. As a result, it is still unstable and not all features have been implemented.**
+
+|
 
 Install
 =======
