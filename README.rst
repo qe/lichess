@@ -50,6 +50,8 @@ Or, if you already have it, upgrade to the latest version with::
 
     pip install lichess --upgrade
 
+|
+
 Example
 =======
 For the full documentation, please check the `Lichess Python API Documentation <https://lichess.readthedocs.io>`_.
@@ -165,6 +167,8 @@ Here's a quick example of what using two of the ____ could look like::
 
 For more examples, check the examples directory in the source code.
 
+|
+
 Warnings
 ========
 **Make sure your inputs are valid.**
@@ -200,11 +204,15 @@ It will ignore this input as shown below:
 As seen above, the ``"chessbrahs "`` input was ignored in lichess_' response because it is invalid (in this case, because of the invalid whitespace).
 This is not limited to invalid characters since inputs that don't exist (such as, a username that does not exist) will also be ignored.
 
+|
+
 Links
 =====
 - `Lichess Python API Documentation <https://lichess.readthedocs.io>`_
 - `Lichess General API Documentation <https://lichess.org/api>`_
 - `Lichess Website <https://lichess.org>`_
+
+|
 
 Contact
 =======
