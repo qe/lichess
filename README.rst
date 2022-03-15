@@ -56,114 +56,88 @@ Example
 =======
 For the full documentation, please check the `Lichess Python API Documentation <https://lichess.readthedocs.io>`_.
 
-Here's a quick example of what using two of the functions could look like::
+Some methods, such as ``Client.get_email()``, require authorization while others, such as ``Client.get_leaderboard()``,
+do not require it. As a result, if you want to use a method/endpoint that does require authorization, you will need to
+`generate a personal access token on Lichess <https://lichess.org/account/oauth/token>`_. If you do so, this will be your API Key.
 
-    from lichess import get_data, get_status
+To determine whether or nor you need to generate a personal access token, check
+the `Lichess API Documentation <https://lichess.org/api>`_ if the endpoint your interested in using has a OAuth2 badge.
 
-    # Get public data of Eric Hansen
-    response1 = get_data("chessbrahs")
+Here's an example of using lichess_ **with** an personal access token:
+::
 
-    # Get real-time users status of them, and if they are playing any games, return their game IDs
-    response2 = get_status("DrNykterstein", "gmwesleyso1993", "penguingim1", with_game_ids=True)
+    API_KEY = "<YOUR API KEY GOES HERE>"
 
+    myclient = Client(token=API_KEY)
 
-    print("RESPONSE 1")
-    print(response1)
-    print()
-    print("RESPONSE 2")
-    print(response2)
-    print()
-    print("Currently online:", len([usr for usr in response2 if usr.get('online')]))
+    print(myclient.get_email())
 
 ::
 
-    RESPONSE 1
+    {'email': 'youremailwillshowuphere@gmail.com'}
+
+
+Here's an example of using lichess_ **without** a personal access token:
+::
+
+    from lichess import
+
+    myclient = Client()
+
+    print(myclient.get_data("ismodes"))
+
+::
+
     {
-    "id": "chessbrahs",
-    "username": "chessbrahs",
+    "id": "ismodes",
+    "username": "ismodes",
     "perfs": {
-    "chess960": {"games": 19, "rating": 2425, "rd": 258, "prog": 112, "prov": True},
-    "antichess": {"games": 4, "rating": 1631, "rd": 296, "prog": 0, "prov": True},
-    "atomic": {"games": 3, "rating": 1601, "rd": 307, "prog": 0, "prov": True},
-    "ultraBullet": {"games": 979, "rating": 2472, "rd": 103, "prog": -102},
-    "blitz": {"games": 786, "rating": 2768, "rd": 89, "prog": 20},
-    "kingOfTheHill": {
-    "games": 4,
-    "rating": 1995,
-    "rd": 300,
-    "prog": 0,
-    "prov": True,
+        "blitz": {"games": 90, "rating": 1599, "rd": 109, "prog": 21},
+        "puzzle": {"games": 984, "rating": 2355, "rd": 132, "prog": 0, "prov": True},
+        "bullet": {"games": 0, "rating": 1500, "rd": 500, "prog": 0, "prov": True},
+        "correspondence": {
+            "games": 0,
+            "rating": 1500,
+            "rd": 500,
+            "prog": 0,
+            "prov": True,
+        },
+        "classical": {"games": 0, "rating": 1500, "rd": 500, "prog": 0, "prov": True},
+        "rapid": {"games": 239, "rating": 1909, "rd": 102, "prog": -79},
+        "storm": {"runs": 15, "score": 24},
+        "racer": {"runs": 2, "score": 32},
     },
-    "crazyhouse": {
-    "games": 466,
-    "rating": 2244,
-    "rd": 193,
-    "prog": 6,
-    "prov": True,
-    },
-    "threeCheck": {"games": 1, "rating": 1425, "rd": 370, "prog": 0, "prov": True},
-    "bullet": {"games": 11652, "rating": 3030, "rd": 45, "prog": -2},
-    "correspondence": {
-    "games": 0,
-    "rating": 1500,
-    "rd": 500,
-    "prog": 0,
-    "prov": True,
-    },
-    "horde": {"games": 62, "rating": 2239, "rd": 240, "prog": 80, "prov": True},
-    "puzzle": {"games": 281, "rating": 2426, "rd": 269, "prog": -13, "prov": True},
-    "classical": {"games": 0, "rating": 1500, "rd": 500, "prog": 0, "prov": True},
-    "rapid": {"games": 3, "rating": 2015, "rd": 286, "prog": 0, "prov": True},
-    "storm": {"runs": 4, "score": 78},
-    },
-    "title": "GM",
-    "createdAt": 1429821366542,
-    "online": False,
+    "createdAt": 1620502920988,
+    "online": True,
     "profile": {
-    "country": "CA",
-    "bio": "Professional chess player, commentator, and streamer. Founder of ChessbrahTV and member of the Canadian Olympic team.\r\n\r\n\r\n\r\n ",
-    "firstName": "Eric",
-    "lastName": "Hansen",
-    "fideRating": 2629,
-    "uscfRating": 2670,
-    "links": "https://linktr.ee/erichansen\r\n",
+        "country": "AR",
+        "location": "🇦🇷",
+        "bio": "🇦🇷",
+        "firstName": "Velez",
+        "links": "🇦🇷",
     },
-    "seenAt": 1647084092185,
-    "playTime": {"total": 1758311, "tv": 527202},
-    "url": "https://lichess.org/@/chessbrahs",
-    "completionRate": 100,
+    "seenAt": 1647342929853,
+    "playTime": {"total": 208321, "tv": 0},
+    "url": "https://lichess.org/@/ismodes",
+    "completionRate": 73,
     "count": {
-    "all": 14377,
-    "rated": 13988,
-    "ai": 36,
-    "draw": 302,
-    "drawH": 299,
-    "loss": 2465,
-    "lossH": 2445,
-    "win": 11610,
-    "winH": 11597,
-    "bookmark": 1,
-    "playing": 0,
-    "import": 1,
-    "me": 0,
+        "all": 338,
+        "rated": 329,
+        "ai": 0,
+        "draw": 13,
+        "drawH": 13,
+        "loss": 148,
+        "lossH": 148,
+        "win": 177,
+        "winH": 177,
+        "bookmark": 2,
+        "playing": 0,
+        "import": 0,
+        "me": 0,
     },
     }
 
-    RESPONSE 2
-    [
-    {"name": "DrNykterstein", "title": "GM", "patron": True, "id": "drnykterstein"},
-    {
-    "name": "gmwesleyso1993",
-    "title": "GM",
-    "id": "gmwesleyso1993",
-    "online": True,
-    "playing": True,
-    "playingId": "850Rfzf8",
-    },
-    {"name": "penguingim1", "title": "GM", "patron": True, "id": "penguingim1"},
-    ]
 
-    Currently online: 1
 
 For more examples, check the examples directory in the source code.
 
@@ -171,43 +145,64 @@ For more examples, check the examples directory in the source code.
 
 Warnings
 ========
-**Make sure your inputs are valid.**
 
-For example, if you input an invalid username, such as ``"chessbrahs "``
+    **Make sure your inputs are valid.**
 
-It will ignore this input as shown below:
+There is basic error handling for some invalid inputs, but there are exceptions.
 
+
+Firstly, there are many types of invalid inputs. Here is an example:
+
+- Usernames that don't exist
+    - Valid username, but no user has taken it
+    - Invalid username
+
+lichess_ does basic error handling with invalid inputs (using Regex), but it does not
+account for valid inputs that do not exist. Here's a more explicit example:
+
+``"jzq0wUnCYR"`` is a valid username (i.e. it can be registered), but at the time of writing this,
+there is no user by this name. As a result, the following code does not return everything:
 ::
 
     from lichess import get_status
 
-    response4 = get_status("chessbrahs ", "gmwesleyso1993")
+    myclient = Client()
 
-    print(response4)
-
-
+    print(myclient.get_status("jzq0wUnCYR", "penguingim1"))
 
 ::
 
-    [
-        {
-            "name": "gmwesleyso1993",
-            "title": "GM",
-            "id": "gmwesleyso1993",
-            "online": True,
-            "playing": True,
-        }
-    ]
+    [{'name': 'penguingim1', 'title': 'GM', 'patron': True, 'id': 'penguingim1'}]
 
-As seen above, the ``"chessbrahs "`` input was ignored in lichess_' response because it is invalid (in this case, because of the invalid whitespace).
-This is not limited to invalid characters since inputs that don't exist (such as, a username that does not exist) will also be ignored.
+
+Conversely, ``"jzq0 wUnCYR"`` is an invalid username, since it has invalid characters (note the whitespace!)
+However, lichess_ does catch this error, as seen below:
+::
+
+    from lichess import get_status
+
+    myclient = Client()
+
+    print(myclient.get_status("jzq0 wUnCYR", "penguingim1"))
+
+::
+
+    Traceback (most recent call last):
+      File "main.py", line 109, in <module>
+        main()
+      File "main.py", line 76, in main
+        print(myclient.get_status("jzq0 wUnCYR", "penguingim1"))
+      raise ArgumentValueError("One or more usernames are invalid.")
+    lichess.exceptions.ArgumentValueError: One or more usernames are invalid.
+
+It is your responsibility to make sure your inputs are valid, but lichess_ tries its best to catch errors <3
 
 |
 
 Links
 =====
 - `Lichess Python API Documentation <https://lichess.readthedocs.io>`_
-- `Lichess General API Documentation <https://lichess.org/api>`_
+- `Lichess API Documentation <https://lichess.org/api>`_
 - `Lichess Website <https://lichess.org>`_
 
 |
