@@ -1,5 +1,8 @@
-# from .utils import *
+
+
 from .enums import *
+from .utils import *
+from .exceptions import *
 import requests
 import urllib
 import logging
@@ -116,6 +119,10 @@ class Client:
         :return: A list with a nested dictionary containing the real-time status of one or more users
         :rtype: list
         """
+        invalid_inputs = [usr for usr in users if not valid_input(usr)]
+        if invalid_inputs:
+            raise ArgumentValueError("One or more usernames are invalid.")
+
         endpoint = "api/users/status"
         path = endpoint + "?ids=" + ','.join(users)
 
@@ -141,8 +148,9 @@ class Client:
     #     :return:
     #     """
     #     if perf_type not in VALID_PERF_TYPES:
-    #         # throw error
-    #         raise Exception("Invalid perf_type value")
+    #         raise ArgumentValueError("Value of perf_type is invalid.")
+    #     if (num_users <= 0) or (200 < num_users):
+    #         raise ArgumentValueError("Value of num_users is invalid. Valid range includes any integer from 1 to 200")
     #
     #     endpoint = "player/top/{nb}/{perfType}"
     #     path = endpoint.format(nb=num_users, perfType=perf_type)
@@ -156,6 +164,9 @@ class Client:
         :return: A dictionary with the public data of the user
         :rtype: dict
         """
+        if not valid_input(user):
+            raise ArgumentValueError("Value of user is invalid.")
+
         endpoint = "api/user/{username}"
         path = endpoint.format(username=user)
         return self.request(path=path)
@@ -168,6 +179,9 @@ class Client:
         :return: A list with a nested dictionary containing the rating history of the user
         :rtype: list
         """
+        if not valid_input(user):
+            raise ArgumentValueError("Value of user is invalid.")
+
         endpoint = "api/user/{username}/rating-history"
         path = endpoint.format(username=user)
         return self.request(path=path)
@@ -185,9 +199,10 @@ class Client:
         :return: A dictionary with the performance statistics of the user
         :rtype: dict
         """
+        if not valid_input(user):
+            raise ArgumentValueError("Value of user is invalid.")
         if perf_type not in VALID_PERF_TYPES:
-            # throw error
-            raise Exception("Invalid perf_type value")
+            raise ArgumentValueError("Value of perf_type is invalid.")
 
         endpoint = "api/user/{username}/perf/{perf}"
         path = endpoint.format(username=user, perf=perf_type)
@@ -201,20 +216,23 @@ class Client:
         :return: A list with a nested dictionary containing the activity feed of the user
         :rtype: list
         """
+        if not valid_input(user):
+            raise ArgumentValueError("Value of user is invalid.")
+
         endpoint = "api/user/{username}/activity"
         path = endpoint.format(username=user)
         return self.request(path=path)
 
-    # def get_by_id():
-    #     """
-    #     Get users by ID
-    #
-    #     :return:
-    #     """
-    #     endpoint = "api/users"
-    #     pass
-    #
-    #
+    def get_by_id():
+        """
+        Get users by ID
+
+        :return:
+        """
+        endpoint = "api/users"
+        pass
+
+
     # def get_team_members():
     #     """
     #     Get members of a team
