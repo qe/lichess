@@ -32,6 +32,8 @@ lichess_ is a Python library for interacting with the `Lichess API <https://lich
 
     **This project is still in Pre-Alpha. As a result, it is still unstable and not all features have been implemented.**
 
+Click `here <https://lichess.readthedocs.io>`_ for the full documentation for this package.
+
 |
 
 Install
