@@ -232,7 +232,6 @@ class Client:
         endpoint = "api/users"
         pass
 
-
     # def get_team_members():
     #     """
     #     Get members of a team
@@ -241,7 +240,6 @@ class Client:
     #     """
     #     endpoint = "api/team/{teamId}/users"
     #     pass
-    #
     #
     # def get_live_streamers():
     #     """
@@ -252,7 +250,6 @@ class Client:
     #     endpoint = "streamer/live"
     #     pass
     #
-    #
     # def get_crosstable():
     #     """
     #     Get crosstable
@@ -261,7 +258,6 @@ class Client:
     #     """
     #     endpoint = "api/crosstable/{user1}/{user2}"
     #     pass
-
 
     # # CUSTOM
     # def get_followers():
