@@ -36,6 +36,7 @@ Click `here <https://lichess.readthedocs.io>`_ for the full documentation for th
 
 |
 
+=======
 Install
 =======
 You can install lichess_ on the Terminal (macOS/UNIX) or the Command Prompt (Windows) with::
@@ -54,6 +55,7 @@ Or, if you already have it, upgrade to the latest version with::
 
 |
 
+=======
 Example
 =======
 For the full documentation, please check the `Lichess Python API Documentation <https://lichess.readthedocs.io>`_.
@@ -65,12 +67,13 @@ do not require it. As a result, if you want to use a method/endpoint that does r
 To determine whether or nor you need to generate a personal access token, check
 the `Lichess API Documentation <https://lichess.org/api>`_ if the endpoint your interested in using has a OAuth2 badge.
 
-Here's an example of using lichess_ **with** an personal access token:
+Here is an example of using lichess_ **with** an personal access token:
 ::
 
-    API_KEY = "<YOUR API KEY GOES HERE>"
+    import lichess
 
-    myclient = Client(token=API_KEY)
+    API_KEY = "<YOUR API KEY GOES HERE>"
+    myclient = lichess.Client(token=API_KEY)
 
     print(myclient.get_email())
 
@@ -79,12 +82,12 @@ Here's an example of using lichess_ **with** an personal access token:
     {'email': 'youremailwillshowuphere@gmail.com'}
 
 
-Here's an example of using lichess_ **without** a personal access token:
+Here is an example of using lichess_ **without** a personal access token:
 ::
 
-    from lichess import
+    import lichess
 
-    myclient = Client()
+    myclient = lichess.Client()
 
     print(myclient.get_data("ismodes"))
 
@@ -145,6 +148,7 @@ For more examples, check the examples directory in the source code.
 
 |
 
+========
 Warnings
 ========
 
@@ -160,15 +164,15 @@ Firstly, there are many types of invalid inputs. Here is an example:
     - Invalid username
 
 lichess_ does basic error handling with invalid inputs (using Regex), but it does not
-account for valid inputs that do not exist. Here's a more explicit example:
+account for valid inputs that do not exist. Here is a more explicit example:
 
 ``"jzq0wUnCYR"`` is a valid username (i.e. it can be registered), but at the time of writing this,
 there is no user by this name. As a result, the following code does not return everything:
 ::
 
-    from lichess import get_status
+    import lichess
 
-    myclient = Client()
+    myclient = lichess.Client()
 
     print(myclient.get_status("jzq0wUnCYR", "penguingim1"))
 
@@ -181,9 +185,9 @@ Conversely, ``"jzq0 wUnCYR"`` is an invalid username, since it has invalid chara
 However, lichess_ does catch this error, as seen below:
 ::
 
-    from lichess import get_status
+    import lichess
 
-    myclient = Client()
+    myclient = lichess.Client()
 
     print(myclient.get_status("jzq0 wUnCYR", "penguingim1"))
 
@@ -201,6 +205,7 @@ It is your responsibility to make sure your inputs are valid, but lichess_ tries
 
 |
 
+=====
 Links
 =====
 - `Lichess Python API Documentation <https://lichess.readthedocs.io>`_
@@ -209,6 +214,7 @@ Links
 
 |
 
+=======
 Contact
 =======
 Email me at
