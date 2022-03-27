@@ -222,11 +222,11 @@ class Client:
     """
     POST
     """
-    # def get_by_id():
-    #     """
-    #     Get users by ID
+    # def get_by_id(self):
+    #     """Get users by ID
     #
     #     :return:
+    #     :rtype:
     #     """
     #     endpoint = "api/users"
     #     pass
@@ -234,11 +234,11 @@ class Client:
     """
     ndjson
     """
-    # def get_team_members():
-    #     """
-    #     Get members of a team
+    # def get_team_members(self):
+    #     """Get members of a team
     #
     #     :return:
+    #     :rtype:
     #     """
     #     endpoint = "api/team/{teamId}/users"
     #     pass
@@ -310,7 +310,7 @@ class Client:
 
     # -- Games ----------------------------------------------------------------
 
-    def export_game(self, game_id, moves=True, pgn_in_json=False, tags=True, clocks=True, evals=True, opening=True, literate=False, players=None):
+    def export_by_id(self, game_id, moves=True, pgn_in_json=False, tags=True, clocks=True, evals=True, opening=True, literate=False, players=None):
         """Download a game in either JSON or PGN format
 
         :param str game_id: ID of game to export
@@ -340,7 +340,7 @@ class Client:
         }
         return self.request(path=path, payload=payload)
 
-    def export_ongoing(self, user, moves=True, pgn_in_json=False, tags=True, clocks=True, evals=True, opening=True, literate=False, players=None):
+    def export_ongoing_by_user(self, user, moves=True, pgn_in_json=False, tags=True, clocks=True, evals=True, opening=True, literate=False, players=None):
         """Download the ongoing game of a user in either JSON or PGN format
 
         :param str user: User whose ongoing game you want to export
@@ -370,8 +370,8 @@ class Client:
         }
         return self.request(path=path, payload=payload)
 
-    def export_games(self, user, since=None, until=None, max_games=None, vs=None, rated=None, perf_type=None, color=None, analyzed=None, moves=True, pgn_in_json=False, tags=True, clocks=True, evals=True, opening=True, ongoing=False, finished=True, players=None, sort="dateDesc"):
-        """Download all games of a user in PGN or ndjson format
+    def export_by_user(self, user, since=None, until=None, max_games=None, vs=None, rated=None, perf_type=None, color=None, analyzed=None, moves=True, pgn_in_json=False, tags=True, clocks=True, evals=True, opening=True, ongoing=False, finished=True, players=None, sort="dateDesc"):
+        """Download all games of a user as PGN or NDJSON
 
         :param str user:
         :param Optional[int] since:
@@ -421,16 +421,67 @@ class Client:
         return self.request(path=path, payload=payload)
 
     """
-    Export games by IDs
-    
-    Stream games of users
-    
-    Get my ongoing games
-    
-    Stream moves of a game
-    
-    Import one game    
+    ndjson
+    POST
     """
+    def export_by_ids(self):
+        """
+
+        :return:
+        :rtype:
+        """
+        endpoint = "api/games/export/_ids"
+        pass
+
+    """
+    ndjson
+    POST
+    """
+    def stream_among_users(self):
+        """Stream the games played between users
+
+        :return:
+        :rtype:
+        """
+        endpoint = "api/stream/games-by-users"
+        pass
+
+    def get_ongoing(self, max_games=9):
+        """Get your ongoing games (realtime and correspondence)
+
+        :param int max_games: Max number of games to fetch
+        :return: A dictionary with your ongoing games
+        :rtype: dict
+        """
+        endpoint = "api/account/playing"
+        return self.request(path=endpoint, oauth=True)
+
+    """
+    ndjson
+    """
+    def stream_moves(self, game_id):
+        """Stream the moves/positions of any ongoing game
+
+        :param str game_id: ID of game to stream
+        :return:
+        :rtype:
+        """
+        endpoint = "api/stream/game/{id}"
+        path = endpoint.format(id=game_id)
+        pass
+
+    """
+    POST
+    """
+    def import_by_pgn(self, pgn):
+        """Upload a PGN game
+
+        :param pgn:
+        :return:
+        :rtype:
+        """
+        endpoint = "api/import"
+        pass
 
     # -- TV -------------------------------------------------------------------
 
@@ -485,11 +536,12 @@ class Client:
         return self.request(path=path, payload=payload)
 
     # -- Puzzles --------------------------------------------------------------
-    def get_daily_puzzle(self):
-        """Get the daily Lichess puzzle in JSON format
 
-        :return:
-        :rtype:
+    def get_daily_puzzle(self):
+        """Get the daily puzzle as JSON
+
+        :return: A dictionary with the daily puzzle
+        :rtype: dict
         """
         endpoint = "api/puzzle/daily"
         return self.request(path=endpoint)
@@ -512,8 +564,8 @@ class Client:
         """Get your puzzle dashboard as JSON
 
         :param int days: Number of days to look back when aggregating puzzle results
-        :return:
-        :rtype:
+        :return: A dictionary with your puzzle dashboard data
+        :rtype: dict
         """
         endpoint = "api/puzzle/dashboard/{days}"
         path = endpoint.format(days=days)
@@ -530,7 +582,7 @@ class Client:
         endpoint = "api/storm/dashboard/{username}"
         path = endpoint.format(username=user)
         payload = {"days": days, }
-        return self.request(path=endpoint, payload=payload)
+        return self.request(path=path, payload=payload)
 
     # -- Teams ----------------------------------------------------------------
     # -- Board ----------------------------------------------------------------

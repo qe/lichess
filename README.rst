@@ -148,6 +148,114 @@ For more examples, check the examples directory in the source code.
 
 |
 
+=========
+Endpoints
+=========
+At the moment, here are the available methods for some of the Lichess API endpoints
+
+::
+
+    -- Account --------------------------------------------------------------
+        Get your public profile information
+        ✓   get_profile()
+        Get your email address
+        ✓   get_email()
+        Get your preferences
+        ✓   get_preferences()
+        Get your kid mode status
+        ✓   get_kid_mode()
+        Set your kid mode status
+        ✗   set_kid_mode()
+
+    -- Users ----------------------------------------------------------------
+        Get real-time status of one or more users
+        ✓   get_status()
+        Get the top 10 players for each speed and variant
+        ✗   get_top_ten()
+        Get leaderboard of an individual speed or variant
+        ✗   get_leaderboard()
+        Get public data of an individual user
+        ✓   get_data()
+        Get rating history of an individual user
+        ✓   get_rating_history()
+        Get performance statistics of an individual user
+        ✓   get_stats()
+        Get the activity feed of an individual user
+        ✓   get_activity()
+        Get users by ID
+        ✗   get_by_id()
+        Get members of a team
+        ✗   get_team_members()
+        Get the current live streamers
+        ✓   get_live_streamers()
+        Get the crosstable of two users
+        ✓   get_crosstable()
+
+    -- Relations ------------------------------------------------------------
+        Get users who you are following
+        ✗   following()
+        Follow a player
+        ✗   follow()
+        Unfollow a player
+        ✗   unfollow()
+
+    -- Games ----------------------------------------------------------------
+        Download a game by ID as PGN or JSON
+        ~   export_by_id()
+        Download the ongoing game of a user in either JSON or PGN format
+        ~   export_ongoing_by_user()
+        Download all games of a user as PGN or NDJSON
+        ~   export_by_user()
+        Download games by IDs as PGN or NDJSON
+        ✗   export_by_ids()
+        Stream the games played between users
+        ✗   stream_among_users()
+        Get your ongoing games
+        ✓   get_ongoing()
+        Stream the moves/positions of any ongoing game
+        ✗   stream_moves()
+        Upload a PGN game
+        ✗   import_by_pgn()
+
+    -- TV -------------------------------------------------------------------
+        Get the best games currently being played for each speed/variant
+        ✓   get_games_channels()
+        Stream positions and moves of the current TV game
+        ✗   stream_tv_game()
+        Get the best games currently being played for a specific speed/variant
+        ~   get_games_channel()
+
+    -- Puzzles --------------------------------------------------------------
+        Get the daily puzzle as JSON
+        ✓   get_daily_puzzle()
+        Get your puzzle activity as NDJSON
+        ✗   get_puzzle_activity()
+        Get your puzzle dashboard as JSON
+        ✓   get_puzzle_dashboard()
+        Get the storm dashboard of any player as JSON
+        ✓   get_storm_dashboard()
+
+    -- Teams ----------------------------------------------------------------
+    -- Board ----------------------------------------------------------------
+    -- Bot ------------------------------------------------------------------
+    -- Challenges -----------------------------------------------------------
+    -- Bulk pairings --------------------------------------------------------
+    -- Arena tournaments ----------------------------------------------------
+    -- Swiss Tournaments ----------------------------------------------------
+    -- Simuls ---------------------------------------------------------------
+    -- Studies --------------------------------------------------------------
+    -- Messaging ------------------------------------------------------------
+    -- Broadcasts -----------------------------------------------------------
+    -- Analysis -------------------------------------------------------------
+    -- Opening Explorer -----------------------------------------------------
+    -- Tablebase ------------------------------------------------------------
+    -- OAuth ----------------------------------------------------------------
+
+``~ json.decoder.JSONDecodeError: Expecting value: line 1 column 2 (char 1)``
+
+
+|
+
 ========
 Warnings
 ========
