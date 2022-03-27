@@ -5,7 +5,7 @@ with open("README.rst") as f:
 
 setup(
     name="lichess",
-    version="0.1.5",
+    version="0.1.6",
     description="Python Lichess API",
     long_description=long_description,
     long_description_content_type="text/x-rst",
@@ -14,7 +14,7 @@ setup(
     author_email="helloemailmerighthere@gmail.com",
     install_requires=['requests==2.27.1', ],
     license="MIT",
-    keywords="lichess chess api wrapper",
+    keywords="lichess chess api python wrapper",
     project_urls={
         "Documentation": "https://lichess.readthedocs.io",
         "Issue Tracker": "https://github.com/qe/lichess/issues",
@@ -32,5 +32,5 @@ setup(
         "Topic :: Software Development :: Libraries",
         "Topic :: Software Development :: Libraries :: Python Modules"
     ],
-    packages=["lichess"],
+    packages=["lichess",],
     )

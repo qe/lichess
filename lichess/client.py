@@ -20,17 +20,19 @@ class Client:
             self.token = token
             # self.s.headers.update(token)
 
-    def request(self, path, oauth=False, post_data=None, *args, **kwargs):
-        full_url = urllib.parse.urljoin(self.url, path)
-        print("hitting this URL:", full_url)
+# post_data
+    def request(self, path, payload=None, oauth=False):
+        parsed_url = urllib.parse.urljoin(self.url, path)
 
         try:
             if oauth:
                 print("OAUTH status:", oauth)
-                response = self.s.get(full_url, headers={"Authorization": f"Bearer {self.token}"})
+                # PPOF: order of parameters ("headers" and "params" parameters)
+                response = self.s.get(parsed_url, headers={"Authorization": f"Bearer {self.token}"}, params=payload)
+                print("hitting this URL:", response.url)
             else:
-                response = self.s.get(full_url)
-            # res = requests.get(address, timeout=30)  # add timeout
+                response = self.s.get(parsed_url, params=payload)
+                print("hitting this URL:", response.url)
         except requests.exceptions.RequestException as err:
             logger.error(err)
             raise
@@ -95,7 +97,7 @@ class Client:
         return self.request(path=endpoint, oauth=True)
 
     """
-    Implement post ability in client.py
+    POST
     """
     # def set_kid_mode(self):
     #     """Set your kid mode status
@@ -112,10 +114,8 @@ class Client:
     def get_status(self, *users, with_game_ids=False):
         """Get real-time status of one or more users
 
-        :param users: User to query their real-time status
-        :type users: str
-        :param with_game_ids: Flag to know whether or not include the ID of games being played, if any, for each player
-        :type with_game_ids: bool, optional
+        :param str users: Users to query their real-time status
+        :param Optional[bool] with_game_ids: Flag to include the ID of games being played, if any, for each player
         :return: A list with a nested dictionary containing the real-time status of one or more users
         :rtype: list
         """
@@ -124,12 +124,13 @@ class Client:
             raise ArgumentValueError("One or more usernames are invalid.")
 
         endpoint = "api/users/status"
-        path = endpoint + "?ids=" + ','.join(users)
 
-        if with_game_ids:
-            path += "&withGameIds=true"
+        payload = {
+            "ids": ','.join(users),
+            "withGameIds": with_game_ids,
+        }
 
-        return self.request(path=path)
+        return self.request(path=endpoint, payload=payload)
 
     """
     Create function in utils.py to manually parse these two responses (JSON problems)
@@ -159,8 +160,7 @@ class Client:
     def get_data(self, user):
         """Get public data of an individual user
 
-        :param user: User to query their public data
-        :type user: str
+        :param str user: User to query their public data
         :return: A dictionary with the public data of the user
         :rtype: dict
         """
@@ -174,8 +174,7 @@ class Client:
     def get_rating_history(self, user):
         """Get rating history of an individual user
 
-        :param user: User to query their public data
-        :type user: str
+        :param str user: User to query their public data
         :return: A list with a nested dictionary containing the rating history of the user
         :rtype: list
         """
@@ -192,10 +191,8 @@ class Client:
     def get_stats(self, user, perf_type):
         """Get performance statistics of an individual user
 
-        :param user: User to query their performance statistics
-        :type user: str
-        :param perf_type: Type of speed or variant to query
-        :type user: str
+        :param str user: User to query their performance statistics
+        :param str perf_type: Type of speed or variant to query
         :return: A dictionary with the performance statistics of the user
         :rtype: dict
         """
@@ -211,8 +208,7 @@ class Client:
     def get_activity(self, user):
         """Get the activity feed of an individual user
 
-        :param user: User to query their activity feed
-        :type user: str
+        :param str user: User to query their activity feed
         :return: A list with a nested dictionary containing the activity feed of the user
         :rtype: list
         """
@@ -223,15 +219,21 @@ class Client:
         path = endpoint.format(username=user)
         return self.request(path=path)
 
-    def get_by_id():
-        """
-        Get users by ID
+    """
+    POST
+    """
+    # def get_by_id():
+    #     """
+    #     Get users by ID
+    #
+    #     :return:
+    #     """
+    #     endpoint = "api/users"
+    #     pass
 
-        :return:
-        """
-        endpoint = "api/users"
-        pass
-
+    """
+    ndjson
+    """
     # def get_team_members():
     #     """
     #     Get members of a team
@@ -240,44 +242,296 @@ class Client:
     #     """
     #     endpoint = "api/team/{teamId}/users"
     #     pass
-    #
-    # def get_live_streamers():
-    #     """
-    #     Get live streamers
-    #
-    #     :return:
-    #     """
-    #     endpoint = "streamer/live"
-    #     pass
-    #
-    # def get_crosstable():
-    #     """
-    #     Get crosstable
-    #
-    #     :return:
-    #     """
-    #     endpoint = "api/crosstable/{user1}/{user2}"
-    #     pass
 
-    # # CUSTOM
-    # def get_followers():
-    #     endpoint =
-    #     pass
-    #
-    # # CUSTOM
-    # def get_following():
-    #     endpoint =
-    #     pass
+    def get_live_streamers(self):
+        """Get the current live streamers
+
+        :return: A list with a nested dictionary containing the current live streamers
+        :rtype: list
+        """
+        endpoint = "streamer/live"
+        return self.request(path=endpoint)
+
+    def get_crosstable(self, user1, user2, matchup=False):
+        """Get the crosstable of two users
+
+        :param str user1: First user to compare with second user
+        :param str user2: Second user to compare with first user
+        :param Optional[bool] matchup: Flag to get current match data, if the two users are currently playing
+        :return: A dictionary with the crosstable (total number of games and current score of the two users)
+        :rtype: dict
+        """
+        endpoint = "api/crosstable/{user1}/{user2}"
+        path = endpoint.format(user1=user1, user2=user2)
+
+        if matchup:
+            payload = {"matchup": True,}
+            return self.request(path=path, payload=payload)
+        else:
+            return self.request(path=path)
 
     # -- Relations ------------------------------------------------------------
 
-    def relations(self):
-        endpoint = "api/rel/following"
-        return self.request(path=endpoint, oauth=True)
+    """
+    ndjson
+    """
+    # def following(self):
+    #     """Get users who you are following
+    #
+    #     :return:
+    #     :rtype:
+    #     """
+    #     endpoint = "api/rel/following"
+    #     return self.request(path=endpoint, oauth=True)
+
+    """
+    POST
+    """
+    # def follow(self, player):
+    #     """Follow a player
+    #
+    #     :param str player:
+    #     :return:
+    #     :rtype:
+    #     """
+    #     pass
+
+    """
+    POST
+    """
+    # def unfollow(self, player):
+    #     """Unfollow a player
+    #
+    #     :param str player:
+    #     :return:
+    #     :rtype:
+    #     """
+    #     pass
 
     # -- Games ----------------------------------------------------------------
+
+    def export_game(self, game_id, moves=True, pgn_in_json=False, tags=True, clocks=True, evals=True, opening=True, literate=False, players=None):
+        """Download a game in either JSON or PGN format
+
+        :param str game_id: ID of game to export
+        :param Optional[bool] moves:
+        :param Optional[bool] pgn_in_json:
+        :param Optional[bool] tags:
+        :param Optional[bool] clocks:
+        :param Optional[bool] evals:
+        :param Optional[bool] opening:
+        :param Optional[bool] literate:
+        :param Optional[str] players:
+        :return:
+        :rtype:
+        """
+        endpoint = "game/export/{gameId}"
+        path = endpoint.format(gameId=game_id)
+
+        payload = {
+            "moves": moves,
+            "pgnInJson": pgn_in_json,
+            "tags": tags,
+            "clocks": clocks,
+            "evals": evals,
+            "opening": opening,
+            "literate": literate,
+            "players": players,
+        }
+        return self.request(path=path, payload=payload)
+
+    def export_ongoing(self, user, moves=True, pgn_in_json=False, tags=True, clocks=True, evals=True, opening=True, literate=False, players=None):
+        """Download the ongoing game of a user in either JSON or PGN format
+
+        :param str user: User whose ongoing game you want to export
+        :param Optional[bool] moves:
+        :param Optional[bool] pgn_in_json:
+        :param Optional[bool] tags:
+        :param Optional[bool] clocks:
+        :param Optional[bool] evals:
+        :param Optional[bool] opening:
+        :param Optional[bool] literate:
+        :param Optional[str] players:
+        :return:
+        :rtype:
+        """
+        endpoint = "api/user/{username}/current-game"
+        path = endpoint.format(username=user)
+
+        payload = {
+            "moves": moves,
+            "pgnInJson": pgn_in_json,
+            "tags": tags,
+            "clocks": clocks,
+            "evals": evals,
+            "opening": opening,
+            "literate": literate,
+            "players": players,
+        }
+        return self.request(path=path, payload=payload)
+
+    def export_games(self, user, since=None, until=None, max_games=None, vs=None, rated=None, perf_type=None, color=None, analyzed=None, moves=True, pgn_in_json=False, tags=True, clocks=True, evals=True, opening=True, ongoing=False, finished=True, players=None, sort="dateDesc"):
+        """Download all games of a user in PGN or ndjson format
+
+        :param str user:
+        :param Optional[int] since:
+        :param Optional[int] until:
+        :param Optional[int] max_games:
+        :param Optional[str] vs:
+        :param Optional[bool] rated:
+        :param Optional[str] perf_type:
+        :param Optional[str] color:
+        :param Optional[bool] analyzed:
+        :param Optional[bool] moves:
+        :param Optional[bool] pgn_in_json:
+        :param Optional[bool] tags:
+        :param Optional[bool] clocks:
+        :param Optional[bool] evals:
+        :param Optional[bool] opening:
+        :param Optional[bool] ongoing:
+        :param Optional[bool] finished:
+        :param Optional[str] players:
+        :param Optional[str] sort:
+        :return:
+        :rtype:
+        """
+        endpoint = "api/user/{username}/current-game"
+        path = endpoint.format(username=user)
+
+        payload = {
+            "since": since,
+            "until": until,
+            "max": max_games,
+            "vs": vs,
+            "rated": rated,
+            "perfType": perf_type,
+            "color": color,
+            "analysed": analyzed,
+            "moves": moves,
+            "pgnInJson": pgn_in_json,
+            "tags": tags,
+            "clocks": clocks,
+            "evals": evals,
+            "opening": opening,
+            "ongoing": ongoing,
+            "finished": finished,
+            "players": players,
+            "sort": sort,
+        }
+        return self.request(path=path, payload=payload)
+
+    """
+    Export games by IDs
+    
+    Stream games of users
+    
+    Get my ongoing games
+    
+    Stream moves of a game
+    
+    Import one game    
+    """
+
     # -- TV -------------------------------------------------------------------
+
+    def get_games_channels(self):
+        """Get the best games currently being played for each speed/variant, including computer games and bot games
+
+        :return: A dictionary with info on the current TV games
+        :rtype: dict
+        """
+        endpoint = "api/tv/channels"
+        return self.request(path=endpoint)
+
+    """
+    ndjson
+    """
+    def stream_tv_game(self):
+        """Stream positions and moves of the current TV game
+
+        :return:
+        :rtype:
+        """
+        endpoint = "api/tv/feed"
+        return self.request(path=endpoint)
+
+    """
+    ndjson
+    """
+    def get_games_channel(self, channel, num_games=10, moves=True, pgn_in_json=False, tags=True, clocks=True, opening=True):
+        """Get the best games currently being played for a specific speed/variant, including computer games and bot games
+
+        :param str channel:
+        :param Optional[bool] num_games:
+        :param Optional[bool] moves:
+        :param Optional[bool] pgn_in_json:
+        :param Optional[bool] tags:
+        :param Optional[bool] clocks:
+        :param Optional[bool] opening:
+        :return:
+        :rtype:
+        """
+        endpoint = "api/tv/{channel}"
+        path = endpoint.format(channel=channel)
+
+        payload = {
+            "nb": num_games,
+            "moves": moves,
+            "pgnInJson": pgn_in_json,
+            "tags": tags,
+            "clocks": clocks,
+            "opening": opening,
+        }
+        return self.request(path=path, payload=payload)
+
     # -- Puzzles --------------------------------------------------------------
+    def get_daily_puzzle(self):
+        """Get the daily Lichess puzzle in JSON format
+
+        :return:
+        :rtype:
+        """
+        endpoint = "api/puzzle/daily"
+        return self.request(path=endpoint)
+
+    """
+    ndjson
+    """
+    def get_puzzle_activity(self, max_entries=None):
+        """Get your puzzle activity as NDJSON
+
+        :param Optional[int] max_entries: Number of entries to download (leave empty to download all activity)
+        :return:
+        :rtype:
+        """
+        endpoint = "api/puzzle/activity"
+        payload = {"max": max_entries,}
+        return self.request(path=endpoint, payload=payload, oauth=True)
+
+    def get_puzzle_dashboard(self, days):
+        """Get your puzzle dashboard as JSON
+
+        :param int days: Number of days to look back when aggregating puzzle results
+        :return:
+        :rtype:
+        """
+        endpoint = "api/puzzle/dashboard/{days}"
+        path = endpoint.format(days=days)
+        return self.request(path=path, oauth=True)
+
+    def get_storm_dashboard(self, user, days=30):
+        """Get the storm dashboard of any player as JSON
+
+        :param str user: User to query their storm dashboard data
+        :param Optional[int] days: Number of days of history to return (set to zero for only highscores)
+        :return: A dictionary with the storm dashboard data of the user
+        :rtype: dict
+        """
+        endpoint = "api/storm/dashboard/{username}"
+        path = endpoint.format(username=user)
+        payload = {"days": days, }
+        return self.request(path=endpoint, payload=payload)
+
     # -- Teams ----------------------------------------------------------------
     # -- Board ----------------------------------------------------------------
     # -- Bot ------------------------------------------------------------------
