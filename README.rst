@@ -67,7 +67,7 @@ do not require it. As a result, if you want to use a method/endpoint that does r
 To determine whether or nor you need to generate a personal access token, check
 the `Lichess API Documentation <https://lichess.org/api>`_ if the endpoint your interested in using has a OAuth2 badge.
 
-Here is an example of using lichess_ **with** an personal access token:
+Here is an example of using lichess_ **with** a personal access token:
 ::
 
     import lichess
@@ -236,13 +236,57 @@ At the moment, here are the available methods for some of the Lichess API endpoi
         ✓   get_storm_dashboard()
 
     -- Teams ----------------------------------------------------------------
+        Get all swiss tournaments of a team
+        ~   get_team_swiss()
+        Get info about a team
+        ✓   get_team_info()
+        Get popular teams
+        ✓   get_popular_teams()
+        Get all the teams a player is a member of
+        ✓   get_teams_player()
+        Get search results for keyword in team search
+        ✓   search_teams()
+        Get members of a team
+        ~   get_team_members()
+        .
+        .
+        .
+        Get join requests
+        ✗   get_join_requests()
+        .
+        .
+        .
+
     -- Board ----------------------------------------------------------------
     -- Bot ------------------------------------------------------------------
     -- Challenges -----------------------------------------------------------
     -- Bulk pairings --------------------------------------------------------
     -- Arena tournaments ----------------------------------------------------
+        Get recently finished, ongoing, and upcoming tournaments
+        ✓   get_arena_all()
+        .
+        .
+        .
+        Get info about an Arena tournament
+        ✓   get_arena_info()
+        .
+        .
+        .
+
     -- Swiss Tournaments ----------------------------------------------------
+        .
+        .
+        .
+        Get info about a Swiss tournament
+        ✓   get_swiss_info()
+        .
+        .
+        .
+
     -- Simuls ---------------------------------------------------------------
+        Get recently finished, ongoing, and upcoming simuls
+        ✓   get_simuls()
+
     -- Studies --------------------------------------------------------------
     -- Messaging ------------------------------------------------------------
     -- Broadcasts -----------------------------------------------------------
@@ -252,7 +296,9 @@ At the moment, here are the available methods for some of the Lichess API endpoi
     -- OAuth ----------------------------------------------------------------
 
 ``~ json.decoder.JSONDecodeError: Expecting value: line 1 column 2 (char 1)``
+happens when browser prompts actual file download
 
+High likelihood this error relates with NDJSONs
 
 |
 

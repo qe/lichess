@@ -310,6 +310,9 @@ class Client:
 
     # -- Games ----------------------------------------------------------------
 
+    """
+    json.decoder.JSONDecodeError: Extra data: line 2 column 1 (char 297)
+    """
     def export_by_id(self, game_id, moves=True, pgn_in_json=False, tags=True, clocks=True, evals=True, opening=True, literate=False, players=None):
         """Download a game in either JSON or PGN format
 
@@ -340,6 +343,9 @@ class Client:
         }
         return self.request(path=path, payload=payload)
 
+    """
+    json.decoder.JSONDecodeError: Extra data: line 2 column 1 (char 297)
+    """
     def export_ongoing_by_user(self, user, moves=True, pgn_in_json=False, tags=True, clocks=True, evals=True, opening=True, literate=False, players=None):
         """Download the ongoing game of a user in either JSON or PGN format
 
@@ -370,6 +376,9 @@ class Client:
         }
         return self.request(path=path, payload=payload)
 
+    """
+    json.decoder.JSONDecodeError: Extra data: line 2 column 1 (char 297)
+    """
     def export_by_user(self, user, since=None, until=None, max_games=None, vs=None, rated=None, perf_type=None, color=None, analyzed=None, moves=True, pgn_in_json=False, tags=True, clocks=True, evals=True, opening=True, ongoing=False, finished=True, players=None, sort="dateDesc"):
         """Download all games of a user as PGN or NDJSON
 
@@ -508,6 +517,7 @@ class Client:
 
     """
     ndjson
+    json.decoder.JSONDecodeError: Extra data: line 2 column 1 (char 297)
     """
     def get_games_channel(self, channel, num_games=10, moves=True, pgn_in_json=False, tags=True, clocks=True, opening=True):
         """Get the best games currently being played for a specific speed/variant, including computer games and bot games
@@ -585,13 +595,152 @@ class Client:
         return self.request(path=path, payload=payload)
 
     # -- Teams ----------------------------------------------------------------
+
+    """
+    ndjson
+    json.decoder.JSONDecodeError: Extra data: line 2 column 1 (char 297)
+    """
+    def get_team_swiss(self, team_id, max_tournaments=100):
+        """Get all swiss tournaments of a team
+
+        :param str team_id:
+        :param Optional[int] max_tournaments:
+        :return:
+        :rtype:
+        """
+        endpoint = "api/team/{teamId}/swiss"
+        path = endpoint.format(teamId=team_id)
+        payload = {"max": max_tournaments, }
+        return self.request(path=path, payload=payload)
+
+    def get_team_info(self, team_id):
+        """Get info about a team
+
+        :param str team_id: ID of team whose info to query
+        :return: A dictionary with the team's info
+        :rtype: dict
+        """
+        endpoint = "api/team/{teamId}"
+        path = endpoint.format(teamId=team_id)
+        return self.request(path=path)
+
+    def get_popular_teams(self, page=1):
+        """Get popular teams
+
+        :param Optional[int] page: Page of most popular teams to query
+        :return: A dictionary with the popular teams
+        :rtype: dict
+        """
+        endpoint = "api/team/all"
+        payload = {"page": page, }
+        return self.request(path=endpoint, payload=payload)
+
+    def get_teams_player(self, user):
+        """Get all the teams a player is a member of
+
+        :param str user:
+        :return: A list with a nested dictionary containing the teams a player is a member of
+        :rtype: list
+        """
+        endpoint = "api/team/of/{username}"
+        path = endpoint.format(username=user)
+        return self.request(path=path)
+
+    def search_teams(self, text, page=1):
+        """Get search results for keyword in team search
+
+        :param str text: Keyword to use in team search
+        :param Optional[int] page: Page of team search to query
+        :return: A dictionary with the team search results
+        :rtype: dict
+        """
+        endpoint = "api/team/search"
+        payload = {
+            "text": text,
+            "page": page,
+        }
+        return self.request(path=endpoint, payload=payload)
+
+    """
+    ndjson
+    """
+    def get_team_members(self, team_id):
+        """Get members of a team
+
+        :param str team_id: ID of team whose members to query
+        :return:
+        :rtype:
+        """
+        endpoint = "api/team/{teamId}/users"
+        path = endpoint.format(teamId=team_id)
+        return self.request(path=path)
+
+    """
+    400 Bad Request
+    """
+    def get_join_requests(self, team_id):
+        """Get pending join requests of your team
+
+        :param str team_id:
+        :return:
+        :rtype:
+        """
+        endpoint = "api/team/{teamId}/requests"
+        path = endpoint.format(teamId=team_id)
+        return self.request(path=path, oauth=True)
+
     # -- Board ----------------------------------------------------------------
     # -- Bot ------------------------------------------------------------------
     # -- Challenges -----------------------------------------------------------
     # -- Bulk pairings --------------------------------------------------------
     # -- Arena tournaments ----------------------------------------------------
+
+    def get_arena_all(self):
+        """Get recently finished, ongoing, and upcoming tournaments
+
+        :return: A dictionary with the recently finished, ongoing, and upcoming tournaments
+        :rtype: dict
+        """
+        endpoint = "api/tournament"
+        return self.request(path=endpoint)
+
+    def get_arena_info(self, tournament_id, page=1):
+        """Get info about an Arena tournament
+
+        :param str tournament_id:
+        :param Optional[int] page:
+        :return: A dictionary with the info about the queried Arena tournament
+        :rtype: dict
+        """
+        endpoint = "api/tournament/{id}"
+        path = endpoint.format(id=tournament_id)
+        payload = {"page": page, }
+        return self.request(path=path, payload=payload)
+
     # -- Swiss Tournaments ----------------------------------------------------
+
+    def get_swiss_info(self, tournament_id):
+        """Get info about a Swiss tournament
+
+        :param str tournament_id:
+        :return: A dictionary with the info about the queried Swiss tournament
+        :rtype: dict
+        """
+        endpoint = "api/swiss/{id}"
+        path = endpoint.format(id=tournament_id)
+        return self.request(path=path)
+
     # -- Simuls ---------------------------------------------------------------
+
+    def get_simuls(self):
+        """Get recently finished, ongoing, and upcoming simuls
+
+        :return: A dictionary with the recently finished, ongoing, and upcoming simuls
+        :rtype: dict
+        """
+        endpoint = "api/simul"
+        return self.request(path=endpoint)
+
     # -- Studies --------------------------------------------------------------
     # -- Messaging ------------------------------------------------------------
     # -- Broadcasts -----------------------------------------------------------
