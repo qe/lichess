@@ -64,8 +64,8 @@ Some methods, such as ``Client.get_email()``, require authorization while others
 do not require it. As a result, if you want to use a method/endpoint that does require authorization, you will need to
 `generate a personal access token on Lichess <https://lichess.org/account/oauth/token>`_. If you do so, this will be your API Key.
 
-To determine whether or nor you need to generate a personal access token, check
-the `Lichess API Documentation <https://lichess.org/api>`_ if the endpoint your interested in using has a OAuth2 badge.
+To determine whether or nor you need to generate a personal access token, check if the endpoint you are interested in
+using has a OAuth2 badge in the `Lichess API Documentation <https://lichess.org/api>`_.
 
 Here is an example of using lichess_ **with** a personal access token:
 ::
@@ -151,7 +151,8 @@ For more examples, check the examples directory in the source code.
 =========
 Endpoints
 =========
-At the moment, here are the available methods for some of the Lichess API endpoints
+At the moment, here are the available methods for some of the Lichess API endpoints.
+Below, the methods with the ``✓`` symbol are working.
 
 ::
 
