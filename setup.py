@@ -5,7 +5,7 @@ with open("README.rst") as f:
 
 setup(
     name="lichess",
-    version="0.1.6",
+    version="0.1.8,
     description="Python Lichess API",
     long_description=long_description,
     long_description_content_type="text/x-rst",

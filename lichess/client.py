@@ -29,10 +29,10 @@ class Client:
                 print("OAUTH status:", oauth)
                 # PPOF: order of parameters ("headers" and "params" parameters)
                 response = self.s.get(parsed_url, headers={"Authorization": f"Bearer {self.token}"}, params=payload)
-                print("hitting this URL:", response.url)
+                # print("hitting this URL:", response.url)
             else:
                 response = self.s.get(parsed_url, params=payload)
-                print("hitting this URL:", response.url)
+                # print("hitting this URL:", response.url)
         except requests.exceptions.RequestException as err:
             logger.error(err)
             raise
