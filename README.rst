@@ -206,7 +206,7 @@ Below, the methods with the ``✓`` symbol are working.
         Download the ongoing game of a user in either JSON or PGN format
         ~   export_ongoing_by_user()
         Download all games of a user as PGN or NDJSON
-        ~   export_by_user()
+        ✓   export_by_user()
         Download games by IDs as PGN or NDJSON
         ✗   export_by_ids()
         Stream the games played between users

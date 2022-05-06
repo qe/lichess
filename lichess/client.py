@@ -312,9 +312,6 @@ class Client:
 
     # -- Games ----------------------------------------------------------------
 
-    """
-    json.decoder.JSONDecodeError: Extra data: line 2 column 1 (char 297)
-    """
     def export_by_id(self, game_id, moves=True, pgn_in_json=False, tags=True, clocks=True, evals=True, opening=True, literate=False, players=None):
         """Download a game in either JSON or PGN format
 
@@ -378,9 +375,6 @@ class Client:
         }
         return self.request(path=path, payload=payload)
 
-    """
-    json.decoder.JSONDecodeError: Extra data: line 2 column 1 (char 297)
-    """
     def export_by_user(self, user, since=None, until=None, max_games=None, vs=None, rated=None, perf_type=None, color=None, analyzed=None, moves=True, pgn_in_json=False, tags=True, clocks=True, evals=True, opening=True, ongoing=False, finished=True, players=None, sort="dateDesc"):
         """Download all games of a user as PGN or NDJSON
 
@@ -406,7 +400,7 @@ class Client:
         :return:
         :rtype:
         """
-        endpoint = "api/user/{username}/current-game"
+        endpoint = "api/games/user/{username}"
         path = endpoint.format(username=user)
 
         payload = {
@@ -429,7 +423,7 @@ class Client:
             "players": players,
             "sort": sort,
         }
-        return self.request(path=path, payload=payload)
+        return self.request(path=path, payload=payload, parse=True)
 
     """
     ndjson
