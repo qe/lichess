@@ -21,7 +21,7 @@ class Client:
             # self.s.headers.update(token)
 
 # post_data
-    def request(self, path, payload=None, oauth=False):
+    def request(self, path, payload=None, oauth=False, **kwargs):
         parsed_url = urllib.parse.urljoin(self.url, path)
 
         try:
@@ -48,6 +48,8 @@ class Client:
         # may get 204 (No Content)
         # if the response contains invalid JSON, attempting r.json() raises requests.exceptions.JSONDecodeError
         if response.status_code == 200:
+            if kwargs.get("parse"):
+                return str(response.text)
             response2json = response.json()
             print(type(response2json))
             # if isinstance(response2json, list):
@@ -341,7 +343,7 @@ class Client:
             "literate": literate,
             "players": players,
         }
-        return self.request(path=path, payload=payload)
+        return self.request(path=path, payload=payload, parse=True, game_id=game_id)
 
     """
     json.decoder.JSONDecodeError: Extra data: line 2 column 1 (char 297)

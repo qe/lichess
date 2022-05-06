@@ -202,7 +202,7 @@ Below, the methods with the ``✓`` symbol are working.
 
     -- Games ----------------------------------------------------------------
         Download a game by ID as PGN or JSON
-        ~   export_by_id()
+        ✓   export_by_id()
         Download the ongoing game of a user in either JSON or PGN format
         ~   export_ongoing_by_user()
         Download all games of a user as PGN or NDJSON
