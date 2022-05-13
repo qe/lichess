@@ -1,5 +1,3 @@
-
-
 from .enums import *
 from .utils import *
 from .exceptions import *
@@ -15,20 +13,21 @@ VALID_PERF_TYPES = [_.value for _ in PerfType]
 class Client:
     def __init__(self, token=None):
         self.url = "https://lichess.org/"
-        self.s = requests.Session()  # keep session alive to improve performance <3
+        self.s = requests.Session()
         if token:
             self.token = token
-            # self.s.headers.update(token)
 
-# post_data
+    # post_data
     def request(self, path, payload=None, oauth=False, **kwargs):
         parsed_url = urllib.parse.urljoin(self.url, path)
 
         try:
             if oauth:
-                print("OAUTH status:", oauth)
-                # PPOF: order of parameters ("headers" and "params" parameters)
-                response = self.s.get(parsed_url, headers={"Authorization": f"Bearer {self.token}"}, params=payload)
+                # print("OAUTH status:", oauth)
+                try:
+                    response = self.s.get(parsed_url, headers={"Authorization": f"Bearer {self.token}"}, params=payload)
+                except AttributeError:
+                    raise APIKeyError("Missing API key. Generate one at: https://lichess.org/account/oauth/token")
                 # print("hitting this URL:", response.url)
             else:
                 response = self.s.get(parsed_url, params=payload)
@@ -39,26 +38,18 @@ class Client:
 
         # print(response.content)
         # print(response.text)
-
         # print("response.status_code", response.status_code)
 
-        # remove this below eventually
-        # call format.py or formats.py file to convert to JSON
-        # https://docs.python-requests.org/en/latest/user/quickstart/#json-response-content
-        # may get 204 (No Content)
-        # if the response contains invalid JSON, attempting r.json() raises requests.exceptions.JSONDecodeError
         if response.status_code == 200:
             if kwargs.get("parse"):
                 return str(response.text)
-            response2json = response.json()
-            print(type(response2json))
-            # if isinstance(response2json, list):
-            #     return response2json[0]
-            return response2json
+            # print(type(response.json()))
+            return response.json()
+        elif response.status_code == 401:
+            raise APIKeyError(
+                "Invalid or expired API key. Generate a new one at: https://lichess.org/account/oauth/token")
         else:
-            # There is some error in response
-            print("ERROR!", response.status_code)
-            return
+            raise ResponseError(response.status_code)
 
     # -- Account --------------------------------------------------------------
 
@@ -113,25 +104,23 @@ class Client:
 
     # -- Users ----------------------------------------------------------------
 
-    def get_status(self, *users, with_game_ids=False):
+    def get_status(self, users, with_game_ids=False):
         """Get real-time status of one or more users
 
-        :param str users: Users to query their real-time status
+        :param list[str] users: Users to query their real-time status
         :param Optional[bool] with_game_ids: Flag to include the ID of games being played, if any, for each player
         :return: A list with a nested dictionary containing the real-time status of one or more users
         :rtype: list
         """
         invalid_inputs = [usr for usr in users if not valid_input(usr)]
         if invalid_inputs:
-            raise ArgumentValueError("One or more usernames are invalid.")
+            logger.warning("One or more usernames are invalid.")
 
         endpoint = "api/users/status"
-
         payload = {
             "ids": ','.join(users),
             "withGameIds": with_game_ids,
         }
-
         return self.request(path=endpoint, payload=payload)
 
     """
@@ -152,8 +141,10 @@ class Client:
     #     """
     #     if perf_type not in VALID_PERF_TYPES:
     #         raise ArgumentValueError("Value of perf_type is invalid.")
+    #         logger.warning("")
     #     if (num_users <= 0) or (200 < num_users):
     #         raise ArgumentValueError("Value of num_users is invalid. Valid range includes any integer from 1 to 200")
+    #         logger.warning("")
     #
     #     endpoint = "player/top/{nb}/{perfType}"
     #     path = endpoint.format(nb=num_users, perfType=perf_type)
@@ -167,7 +158,7 @@ class Client:
         :rtype: dict
         """
         if not valid_input(user):
-            raise ArgumentValueError("Value of user is invalid.")
+            logger.warning("Value of user is invalid.")
 
         endpoint = "api/user/{username}"
         path = endpoint.format(username=user)
@@ -181,7 +172,7 @@ class Client:
         :rtype: list
         """
         if not valid_input(user):
-            raise ArgumentValueError("Value of user is invalid.")
+            logger.warning("Value of user is invalid.")
 
         endpoint = "api/user/{username}/rating-history"
         path = endpoint.format(username=user)
@@ -199,9 +190,9 @@ class Client:
         :rtype: dict
         """
         if not valid_input(user):
-            raise ArgumentValueError("Value of user is invalid.")
+            logger.warning("Value of user is invalid.")
         if perf_type not in VALID_PERF_TYPES:
-            raise ArgumentValueError("Value of perf_type is invalid.")
+            logger.warning("Value of perf_type is invalid.")
 
         endpoint = "api/user/{username}/perf/{perf}"
         path = endpoint.format(username=user, perf=perf_type)
@@ -215,7 +206,7 @@ class Client:
         :rtype: list
         """
         if not valid_input(user):
-            raise ArgumentValueError("Value of user is invalid.")
+            logger.warning("Value of user is invalid.")
 
         endpoint = "api/user/{username}/activity"
         path = endpoint.format(username=user)
