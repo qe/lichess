@@ -57,7 +57,7 @@ Or, if you already have it, upgrade to the latest version with::
 Usage
 =====
 
-For the full documentation, please check the `Lichess Python API Documentation <https://lichess.readthedocs.io>`_.
+For the full documentation, please check the `Lichess Python API Documentation <https://lichess-api.readthedocs.io>`_.
 
 Some methods, such as ``Client.get_email()``, require authorization while others, such as ``Client.get_leaderboard()``,
 do not require it. As a result, if you want to use a method/endpoint that does require authorization, you will need to
@@ -305,7 +305,7 @@ Below, the methods with the ``✓`` symbol are working.
 =====
 Links
 =====
-- `Lichess Python API Documentation <https://lichess.readthedocs.io>`_
+- `Lichess Python API Documentation <https://lichess-api.readthedocs.io>`_
 - `Lichess API Documentation <https://lichess.org/api>`_
 - `Lichess Website <https://lichess.org>`_
 
