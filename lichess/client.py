@@ -1,9 +1,9 @@
 from .enums import *
 from .utils import *
 from .exceptions import *
+import logging
 import requests
 import urllib
-import logging
 
 
 logger = logging.getLogger(__name__)
@@ -43,6 +43,8 @@ class Client:
         if response.status_code == 200:
             if kwargs.get("parse"):
                 return str(response.text)
+            elif kwargs.get("ndjson"):
+                return ndjson(response)
             # print(type(response.json()))
             return response.json()
         elif response.status_code == 401:
@@ -109,7 +111,7 @@ class Client:
 
         :param list[str] users: Users to query their real-time status
         :param Optional[bool] with_game_ids: Flag to include the ID of games being played, if any, for each player
-        :return: A list with a nested dictionary containing the real-time status of one or more users
+        :return: A list with dictionaries containing the real-time status of one or more users
         :rtype: list
         """
         invalid_inputs = [usr for usr in users if not valid_input(usr)]
@@ -168,7 +170,7 @@ class Client:
         """Get rating history of an individual user
 
         :param str user: User to query their public data
-        :return: A list with a nested dictionary containing the rating history of the user
+        :return: A list with dictionaries containing the rating history of the user
         :rtype: list
         """
         if not valid_input(user):
@@ -202,7 +204,7 @@ class Client:
         """Get the activity feed of an individual user
 
         :param str user: User to query their activity feed
-        :return: A list with a nested dictionary containing the activity feed of the user
+        :return: A list with dictionaries containing the activity feed of the user
         :rtype: list
         """
         if not valid_input(user):
@@ -224,22 +226,10 @@ class Client:
     #     endpoint = "api/users"
     #     pass
 
-    """
-    ndjson
-    """
-    # def get_team_members(self):
-    #     """Get members of a team
-    #
-    #     :return:
-    #     :rtype:
-    #     """
-    #     endpoint = "api/team/{teamId}/users"
-    #     pass
-
     def get_live_streamers(self):
         """Get the current live streamers
 
-        :return: A list with a nested dictionary containing the current live streamers
+        :return: A list with dictionaries containing the current live streamers
         :rtype: list
         """
         endpoint = "streamer/live"
@@ -265,17 +255,14 @@ class Client:
 
     # -- Relations ------------------------------------------------------------
 
-    """
-    ndjson
-    """
-    # def following(self):
-    #     """Get users who you are following
-    #
-    #     :return:
-    #     :rtype:
-    #     """
-    #     endpoint = "api/rel/following"
-    #     return self.request(path=endpoint, oauth=True)
+    def following(self):
+        """Get users who you are following
+
+        :return: A list with dictionaries containing the information of users you are following
+        :rtype: list
+        """
+        endpoint = "api/rel/following"
+        return self.request(path=endpoint, oauth=True, ndjson=True)
 
     """
     POST
@@ -364,7 +351,7 @@ class Client:
             "literate": literate,
             "players": players,
         }
-        return self.request(path=path, payload=payload)
+        return self.request(path=path, payload=payload, parse=True)
 
     def export_by_user(self, user, since=None, until=None, max_games=None, vs=None, rated=None, perf_type=None, color=None, analyzed=None, moves=True, pgn_in_json=False, tags=True, clocks=True, evals=True, opening=True, ongoing=False, finished=True, players=None, sort="dateDesc"):
         """Download all games of a user as PGN or NDJSON
@@ -464,7 +451,7 @@ class Client:
         """
         endpoint = "api/stream/game/{id}"
         path = endpoint.format(id=game_id)
-        pass
+        return self.request(path=path, ndjson=True)
 
     """
     POST
@@ -500,7 +487,7 @@ class Client:
         :rtype:
         """
         endpoint = "api/tv/feed"
-        return self.request(path=endpoint)
+        return self.request(path=endpoint, ndjson=True)
 
     """
     ndjson
@@ -543,19 +530,16 @@ class Client:
         endpoint = "api/puzzle/daily"
         return self.request(path=endpoint)
 
-    """
-    ndjson
-    """
     def get_puzzle_activity(self, max_entries=None):
         """Get your puzzle activity as NDJSON
 
         :param Optional[int] max_entries: Number of entries to download (leave empty to download all activity)
-        :return:
-        :rtype:
+        :return: A list with dictionaries containing all your puzzle activity
+        :rtype: list
         """
         endpoint = "api/puzzle/activity"
         payload = {"max": max_entries,}
-        return self.request(path=endpoint, payload=payload, oauth=True)
+        return self.request(path=endpoint, payload=payload, oauth=True, ndjson=True)
 
     def get_puzzle_dashboard(self, days):
         """Get your puzzle dashboard as JSON
@@ -583,22 +567,18 @@ class Client:
 
     # -- Teams ----------------------------------------------------------------
 
-    """
-    ndjson
-    json.decoder.JSONDecodeError: Extra data: line 2 column 1 (char 297)
-    """
     def get_team_swiss(self, team_id, max_tournaments=100):
         """Get all swiss tournaments of a team
 
-        :param str team_id:
-        :param Optional[int] max_tournaments:
-        :return:
-        :rtype:
+        :param str team_id: ID of team whose info to query
+        :param Optional[int] max_tournaments: Maximum tournaments to query
+        :return: A list with dictionaries containing all the swiss tournaments of a team
+        :rtype: list
         """
         endpoint = "api/team/{teamId}/swiss"
         path = endpoint.format(teamId=team_id)
         payload = {"max": max_tournaments, }
-        return self.request(path=path, payload=payload)
+        return self.request(path=path, payload=payload, ndjson=True)
 
     def get_team_info(self, team_id):
         """Get info about a team
@@ -626,7 +606,7 @@ class Client:
         """Get all the teams a player is a member of
 
         :param str user:
-        :return: A list with a nested dictionary containing the teams a player is a member of
+        :return: A list with dictionaries containing the teams a player is a member of
         :rtype: list
         """
         endpoint = "api/team/of/{username}"
@@ -648,19 +628,16 @@ class Client:
         }
         return self.request(path=endpoint, payload=payload)
 
-    """
-    ndjson
-    """
     def get_team_members(self, team_id):
         """Get members of a team
 
         :param str team_id: ID of team whose members to query
-        :return:
-        :rtype:
+        :return: A list with dictionaries containing the members of a team
+        :rtype: list
         """
         endpoint = "api/team/{teamId}/users"
         path = endpoint.format(teamId=team_id)
-        return self.request(path=path)
+        return self.request(path=path, ndjson=True)
 
     """
     400 Bad Request

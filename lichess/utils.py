@@ -1,6 +1,13 @@
+import json
 import re
+
+
 VALID_REGEX = "^[A-Za-z0-9_-]*$"
 VALID_RULES = re.compile(VALID_REGEX)
+
+
+def ndjson(response):
+    return [json.loads(i) for i in str(response.text).splitlines()]
 
 
 def valid_input(user_input):
