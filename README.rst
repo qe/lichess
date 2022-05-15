@@ -228,7 +228,7 @@ Below, the methods with the ``✓`` symbol are working.
         Stream positions and moves of the current TV game
         ✗   stream_tv_game()
         Get the best games currently being played for a specific speed/variant
-        ~   get_games_channel()
+        ✓   get_games_channel()
 
     -- Puzzles --------------------------------------------------------------
         Get the daily puzzle as JSON
@@ -277,6 +277,14 @@ Below, the methods with the ``✓`` symbol are working.
         .
         .
         .
+        Export games of an Arena tournament
+        ✓   export_by_arena
+        Get results of an Arena tournament
+        ✓   get_arena_results
+        .
+        .
+        .
+
 
     -- Swiss Tournaments ----------------------------------------------------
         .

@@ -291,19 +291,19 @@ class Client:
     # -- Games ----------------------------------------------------------------
 
     def export_by_id(self, game_id, moves=True, pgn_in_json=False, tags=True, clocks=True, evals=True, opening=True, literate=False, players=None):
-        """Download a game in either JSON or PGN format
+        """Export an individual game
 
         :param str game_id: ID of game to export
-        :param Optional[bool] moves:
-        :param Optional[bool] pgn_in_json:
-        :param Optional[bool] tags:
-        :param Optional[bool] clocks:
-        :param Optional[bool] evals:
-        :param Optional[bool] opening:
-        :param Optional[bool] literate:
-        :param Optional[str] players:
-        :return:
-        :rtype:
+        :param Optional[bool] moves: Whether to include the PGN moves
+        :param Optional[bool] pgn_in_json: Whether to include the full PGN within the JSON response
+        :param Optional[bool] tags: Whether to include the PGN tags
+        :param Optional[bool] clocks: Whether to include clock comments, whenever available, in the PGN moves
+        :param Optional[bool] evals: Whether to include analysis evaluation comments, whenever available, in the PGN
+        :param Optional[bool] opening: Whether to include the opening name
+        :param Optional[bool] literate: Whether to include textual annotations in the PGN about the opening, analysis variations, mistakes, and game termination
+        :param Optional[str] players: A URL of a text file containing real names and ratings to replace Lichess usernames and ratings in the PGN
+        :return: A string with PGN data of an individual game
+        :rtype: str
         """
         endpoint = "game/export/{gameId}"
         path = endpoint.format(gameId=game_id)
@@ -320,23 +320,20 @@ class Client:
         }
         return self.request(path=path, payload=payload, parse=True, game_id=game_id)
 
-    """
-    json.decoder.JSONDecodeError: Extra data: line 2 column 1 (char 297)
-    """
     def export_ongoing_by_user(self, user, moves=True, pgn_in_json=False, tags=True, clocks=True, evals=True, opening=True, literate=False, players=None):
-        """Download the ongoing game of a user in either JSON or PGN format
+        """Export the ongoing game of a user
 
         :param str user: User whose ongoing game you want to export
-        :param Optional[bool] moves:
-        :param Optional[bool] pgn_in_json:
-        :param Optional[bool] tags:
-        :param Optional[bool] clocks:
-        :param Optional[bool] evals:
-        :param Optional[bool] opening:
-        :param Optional[bool] literate:
-        :param Optional[str] players:
-        :return:
-        :rtype:
+        :param Optional[bool] moves: Whether to include the PGN moves
+        :param Optional[bool] pgn_in_json: Whether to include the full PGN within the JSON response
+        :param Optional[bool] tags: Whether to include the PGN tags
+        :param Optional[bool] clocks: Whether to include clock comments, whenever available, in the PGN moves
+        :param Optional[bool] evals: Whether to include analysis evaluation comments, whenever available, in the PGN
+        :param Optional[bool] opening: Whether to include the opening name
+        :param Optional[bool] literate: Whether to include textual annotations in the PGN about the opening, analysis variations, mistakes, and game termination
+        :param Optional[str] players: A URL of a text file containing real names and ratings to replace Lichess usernames and ratings in the PGN
+        :return: A string with PGN data of the user's ongoing game
+        :rtype: str
         """
         endpoint = "api/user/{username}/current-game"
         path = endpoint.format(username=user)
@@ -354,29 +351,29 @@ class Client:
         return self.request(path=path, payload=payload, parse=True)
 
     def export_by_user(self, user, since=None, until=None, max_games=None, vs=None, rated=None, perf_type=None, color=None, analyzed=None, moves=True, pgn_in_json=False, tags=True, clocks=True, evals=True, opening=True, ongoing=False, finished=True, players=None, sort="dateDesc"):
-        """Download all games of a user as PGN or NDJSON
+        """Export all the games of a user
 
-        :param str user:
-        :param Optional[int] since:
-        :param Optional[int] until:
-        :param Optional[int] max_games:
-        :param Optional[str] vs:
-        :param Optional[bool] rated:
-        :param Optional[str] perf_type:
-        :param Optional[str] color:
-        :param Optional[bool] analyzed:
-        :param Optional[bool] moves:
-        :param Optional[bool] pgn_in_json:
-        :param Optional[bool] tags:
-        :param Optional[bool] clocks:
-        :param Optional[bool] evals:
-        :param Optional[bool] opening:
-        :param Optional[bool] ongoing:
-        :param Optional[bool] finished:
-        :param Optional[str] players:
-        :param Optional[str] sort:
-        :return:
-        :rtype:
+        :param str user: User whose games you want to export
+        :param Optional[int] since: Filters for games played since this timestamp (default is account creation date)
+        :param Optional[int] until: Filters for games played until this timestamp (default is now)
+        :param Optional[int] max_games: How many games to download (default downloads all games)
+        :param Optional[str] vs: Filter for games that are only played against this specific opponent 
+        :param Optional[bool] rated: Filter for games that are only rated (True) or only casual (False)
+        :param Optional[str] perf_type: Filter for games that have a specific speed or variant
+        :param Optional[str] color: Filters for games only played as a specific color ("white" or "black")
+        :param Optional[bool] analyzed: Whether to filter for games that have a computer analysis available
+        :param Optional[bool] moves: Whether to include the PGN moves
+        :param Optional[bool] pgn_in_json: Whether to include the full PGN within the JSON response
+        :param Optional[bool] tags: Whether to include the PGN tags
+        :param Optional[bool] clocks: Whether to include clock comments, whenever available, in the PGN moves
+        :param Optional[bool] evals: Whether to include analysis evaluation comments, whenever available, in the PGN
+        :param Optional[bool] opening: Whether to include the opening name
+        :param Optional[bool] ongoing: Whether to include ongoing games (last 3 moves will be omitted)
+        :param Optional[bool] finished: Whether to only include finished games (False to only get ongoing games)
+        :param Optional[str] players: A URL of a text file containing real names and ratings to replace Lichess usernames and ratings in the PGN
+        :param Optional[str] sort: Sort order of the games ("dateAsc" or "dateDesc")
+        :return: A string with PGN data of all the user's games
+        :rtype: str
         """
         endpoint = "api/games/user/{username}"
         path = endpoint.format(username=user)
@@ -407,27 +404,27 @@ class Client:
     ndjson
     POST
     """
-    def export_by_ids(self):
-        """
+    # def export_by_ids(self):
+    #     """
 
-        :return:
-        :rtype:
-        """
-        endpoint = "api/games/export/_ids"
-        pass
+    #     :return:
+    #     :rtype:
+    #     """
+    #     endpoint = "api/games/export/_ids"
+    #     pass
 
     """
     ndjson
     POST
     """
-    def stream_among_users(self):
-        """Stream the games played between users
+    # def stream_among_users(self):
+    #     """Stream the games played between users
 
-        :return:
-        :rtype:
-        """
-        endpoint = "api/stream/games-by-users"
-        pass
+    #     :return:
+    #     :rtype:
+    #     """
+    #     endpoint = "api/stream/games-by-users"
+    #     pass
 
     def get_ongoing(self, max_games=9):
         """Get your ongoing games (realtime and correspondence)
@@ -480,31 +477,27 @@ class Client:
     """
     ndjson
     """
-    def stream_tv_game(self):
-        """Stream positions and moves of the current TV game
+    # def stream_tv_game(self):
+    #     """Stream positions and moves of the current TV game
 
-        :return:
-        :rtype:
-        """
-        endpoint = "api/tv/feed"
-        return self.request(path=endpoint, ndjson=True)
+    #     :return:
+    #     :rtype:
+    #     """
+    #     endpoint = "api/tv/feed"
+    #     return self.request(path=endpoint, ndjson=True)
 
-    """
-    ndjson
-    json.decoder.JSONDecodeError: Extra data: line 2 column 1 (char 297)
-    """
     def get_games_channel(self, channel, num_games=10, moves=True, pgn_in_json=False, tags=True, clocks=True, opening=True):
         """Get the best games currently being played for a specific speed/variant, including computer games and bot games
 
-        :param str channel:
-        :param Optional[bool] num_games:
-        :param Optional[bool] moves:
-        :param Optional[bool] pgn_in_json:
-        :param Optional[bool] tags:
-        :param Optional[bool] clocks:
-        :param Optional[bool] opening:
-        :return:
-        :rtype:
+        :param str channel: Name of the channel in camelCase
+        :param Optional[bool] num_games: Number of games to fetch
+        :param Optional[bool] moves: Whether to include the PGN moves
+        :param Optional[bool] pgn_in_json: Whether to include the full PGN within the JSON response
+        :param Optional[bool] tags: Whether to include the PGN tags
+        :param Optional[bool] clocks: Whether to include clock comments, whenever available, in the PGN moves
+        :param Optional[bool] opening: Whether to include the opening name
+        :return: A string with the PGN data of the best games being played for a specific speed/variant
+        :rtype: str
         """
         endpoint = "api/tv/{channel}"
         path = endpoint.format(channel=channel)
@@ -517,7 +510,7 @@ class Client:
             "clocks": clocks,
             "opening": opening,
         }
-        return self.request(path=path, payload=payload)
+        return self.request(path=path, payload=payload, parse=True)
 
     # -- Puzzles --------------------------------------------------------------
 
@@ -671,7 +664,7 @@ class Client:
     def get_arena_info(self, tournament_id, page=1):
         """Get info about an Arena tournament
 
-        :param str tournament_id:
+        :param str tournament_id: ID of arena torunament to query
         :param Optional[int] page:
         :return: A dictionary with the info about the queried Arena tournament
         :rtype: dict
@@ -680,6 +673,38 @@ class Client:
         path = endpoint.format(id=tournament_id)
         payload = {"page": page, }
         return self.request(path=path, payload=payload)
+
+    def export_by_arena(self, tournament_id):
+        """Export games of an Arena tournament
+        
+        :param str tournament_id: ID of arena torunament to query
+        :return: A string with PGN data of the Arena tournament's games
+        :rtype: str
+        """
+        endpoint = "api/tournament/{id}/games"
+        path = endpoint.format(id=tournament_id)
+        return self.request(path=path, parse=True)
+
+    def get_arena_results(self, tournament_id, max_players=None):
+        """Get results of an Arena tournament
+        
+        :param str tournament_id: ID of arena torunament to query
+        :param Optional[int] max_players: Maximum number of players to fetch
+        :return: A list with dictionaries of Arena tournament players, with their score and performance, sorted by rank (best first)
+        :rtype: list
+        """
+        endpoint = "api/tournament/{id}/results"
+        path = endpoint.format(id=tournament_id)
+        if max_players:
+            payload = {"nb": max_players, }
+            return self.request(path=path, payload=payload, ndjson=True)
+        else:
+            return self.request(path=path, ndjson=True)
+
+    # Get results of an Arena tournament
+    # Get team standing of a team battle
+    # Get tournaments created by a user
+
 
     # -- Swiss Tournaments ----------------------------------------------------
 
