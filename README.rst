@@ -58,7 +58,7 @@ Or, if you already have it, upgrade to the latest version with::
 Usage
 =====
 
-For the full documentation, please check the `Lichess Python API Documentation <https://lichess-api.readthedocs.io>`_.
+`This GitHub Gist <https://gist.github.com/qe/dd9df3a4851a4ffddda9eb72eaa9a9f4>`_ shows the currently available methods since the full documentation is still in development.
 
 Some methods, such as ``Client.get_email()``, require authorization while others, such as ``Client.get_leaderboard()``,
 do not require it. As a result, if you want to use a method/endpoint that does require authorization, you will need to
@@ -106,6 +106,7 @@ Get the profile data of a user
 Get the rating history of a user
 
 ::
+
     myclient = lichess.Client()
 
     history = myclient.get_rating_history("agadmator")
@@ -167,176 +168,15 @@ For more examples, check the examples directory in the source code.
 =========
 Endpoints
 =========
-At the moment, here are the available methods for some of the Lichess API endpoints.
-Below, the methods with the ``✓`` symbol are working.
+This GitHub Gist shows the current available methods
 
-::
-
-    -- Account --------------------------------------------------------------
-        Get your public profile information
-        ✓   get_profile()
-        Get your email address
-        ✓   get_email()
-        Get your preferences
-        ✓   get_preferences()
-        Get your kid mode status
-        ✓   get_kid_mode()
-        Set your kid mode status
-        ✗   set_kid_mode()
-
-    -- Users ----------------------------------------------------------------
-        Get real-time status of one or more users
-        ✓   get_status()
-        Get the top 10 players for each speed and variant
-        ✗   get_top_ten()
-        Get leaderboard of an individual speed or variant
-        ✗   get_leaderboard()
-        Get public data of an individual user
-        ✓   get_data()
-        Get rating history of an individual user
-        ✓   get_rating_history()
-        Get performance statistics of an individual user
-        ✓   get_stats()
-        Get the activity feed of an individual user
-        ✓   get_activity()
-        Get users by ID
-        ✗   get_by_id()
-        Get the current live streamers
-        ✓   get_live_streamers()
-        Get the crosstable of two users
-        ✓   get_crosstable()
-
-    -- Relations ------------------------------------------------------------
-        Get users who you are following
-        ✓   following()
-        Follow a player
-        ✗   follow()
-        Unfollow a player
-        ✗   unfollow()
-
-    -- Games ----------------------------------------------------------------
-        Download a game by ID as PGN or JSON
-        ✓   export_by_id()
-        Download the ongoing game of a user in either JSON or PGN format
-        ✓   export_ongoing_by_user()
-        Download all games of a user as PGN or NDJSON
-        ✓   export_by_user()
-        Download games by IDs as PGN or NDJSON
-        ✗   export_by_ids()
-        Stream the games played between users
-        ✗   stream_among_users()
-        Get your ongoing games
-        ✓   get_ongoing()
-        Stream the moves/positions of any ongoing game
-        ✗   stream_moves()
-        Upload a PGN game
-        ✗   import_by_pgn()
-
-    -- TV -------------------------------------------------------------------
-        Get the best games currently being played for each speed/variant
-        ✓   get_games_channels()
-        Stream positions and moves of the current TV game
-        ✗   stream_tv_game()
-        Get the best games currently being played for a specific speed/variant
-        ✓   get_games_channel()
-
-    -- Puzzles --------------------------------------------------------------
-        Get the daily puzzle as JSON
-        ✓   get_daily_puzzle()
-        Get your puzzle activity as NDJSON
-        ✓   get_puzzle_activity()
-        Get your puzzle dashboard as JSON
-        ✓   get_puzzle_dashboard()
-        Get the storm dashboard of any player as JSON
-        ✓   get_storm_dashboard()
-
-    -- Teams ----------------------------------------------------------------
-        Get all swiss tournaments of a team
-        ✓   get_team_swiss()
-        Get info about a team
-        ✓   get_team_info()
-        Get popular teams
-        ✓   get_popular_teams()
-        Get all the teams a player is a member of
-        ✓   get_teams_player()
-        Get search results for keyword in team search
-        ✓   search_teams()
-        Get members of a team
-        ✓   get_team_members()
-        .
-        .
-        .
-        Get join requests
-        ✗   get_join_requests()
-        .
-        .
-        .
-
-    -- Board ----------------------------------------------------------------
-    -- Bot ------------------------------------------------------------------
-    -- Challenges -----------------------------------------------------------
-    -- Bulk pairings --------------------------------------------------------
-    -- Arena tournaments ----------------------------------------------------
-        Get recently finished, ongoing, and upcoming tournaments
-        ✓   get_arena_all()
-        .
-        .
-        .
-        Get info about an Arena tournament
-        ✓   get_arena_info()
-        .
-        .
-        .
-        Export games of an Arena tournament
-        ✓   export_arena_games()
-        Get results of an Arena tournament
-        ✓   get_arena_results()
-        Get team standing of a team battle
-        ✓   get_teambattle_info()
-        Get tournaments created by a user
-        ✓   get_arena_createdby()
-
-    -- Swiss Tournaments ----------------------------------------------------
-        .
-        .
-        .
-        Get info about a Swiss tournament
-        ✓   get_swiss_info()
-        .
-        .
-        .
-        Export the TRF of a Swiss tournament
-        ✓   export_swiss_info()
-        Export games of a Swiss tournament
-        ✓   export_swiss_games()
-        Get results of a Swiss tournament
-        ✓   get_swiss_results()
-
-    -- Simuls ---------------------------------------------------------------
-        Get recently finished, ongoing, and upcoming simuls
-        ✓   get_simuls()
-
-    -- Studies --------------------------------------------------------------
-        Export one study chapter
-        ✓   export_chapter()
-        Export all the chapters of a study
-        ✓   export_chapters()
-        Export all studies of a user
-        ✓   export_studies()
-
-    -- Messaging ------------------------------------------------------------
-    -- Broadcasts -----------------------------------------------------------
-    -- Analysis -------------------------------------------------------------
-    -- Opening Explorer -----------------------------------------------------
-    -- Tablebase ------------------------------------------------------------
-    -- OAuth ----------------------------------------------------------------
 
 |
 
 =====
 Links
 =====
-- `Lichess Python API Documentation <https://lichess-api.readthedocs.io>`_
+- `Lichess Python API Currently Available Methods <https://gist.github.com/qe/dd9df3a4851a4ffddda9eb72eaa9a9f4>`_
 - `Lichess API Documentation <https://lichess.org/api>`_
 - `Lichess Website <https://lichess.org>`_
 
