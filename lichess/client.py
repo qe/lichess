@@ -515,7 +515,7 @@ class Client:
     # -- Puzzles --------------------------------------------------------------
 
     def get_daily_puzzle(self):
-        """Get the daily puzzle as JSON
+        """Get the daily puzzle
 
         :return: A dictionary with the daily puzzle
         :rtype: dict
@@ -524,7 +524,7 @@ class Client:
         return self.request(path=endpoint)
 
     def get_puzzle_activity(self, max_entries=None):
-        """Get your puzzle activity as NDJSON
+        """Get your puzzle activity
 
         :param Optional[int] max_entries: Number of entries to download (leave empty to download all activity)
         :return: A list with dictionaries containing all your puzzle activity
@@ -535,7 +535,7 @@ class Client:
         return self.request(path=endpoint, payload=payload, oauth=True, ndjson=True)
 
     def get_puzzle_dashboard(self, days):
-        """Get your puzzle dashboard as JSON
+        """Get your puzzle dashboard
 
         :param int days: Number of days to look back when aggregating puzzle results
         :return: A dictionary with your puzzle dashboard data
@@ -546,7 +546,7 @@ class Client:
         return self.request(path=path, oauth=True)
 
     def get_storm_dashboard(self, user, days=30):
-        """Get the storm dashboard of any player as JSON
+        """Get the storm dashboard of a player
 
         :param str user: User to query their storm dashboard data
         :param Optional[int] days: Number of days of history to return (set to zero for only highscores)

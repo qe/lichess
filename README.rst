@@ -1,6 +1,6 @@
 
 
-.. image:: https://raw.githubusercontent.com/qe/lichess/main/docs/lichess.png
+.. image:: https://raw.githubusercontent.com/qe/lichess/main/media/lichess.png
    :target: https://lichess.org
    :width: 160
    :alt: Logo
