@@ -98,30 +98,35 @@ The following are some examples of popular uses of this package:
 
 |
 
-Get the profile data of a user
+**Get the profile data of a user**
 
 ::
 
-    myclient = lichess.Client()
+    import lichess
 
+    myclient = lichess.Client()
     user = myclient.get_data("bmartin")
 
+|
 
-Get the rating history of a user
+**Get the rating history of a user**
 
 ::
 
-    myclient = lichess.Client()
+    import lichess
 
+    myclient = lichess.Client()
     history = myclient.get_rating_history("agadmator")
 
+|
 
-Get the list of users that are offline, online, and playing
+**Get the list of users that are offline, online, and playing**
 
 ::
 
-    myclient = lichess.Client()
+    import lichess
 
+    myclient = lichess.Client()
     users = ["Oliver_Penrose", "bmartin", "ismodes", "penguingim1", "Zhigalko_Sergei"]
     data = myclient.get_status(users)
 
@@ -129,41 +134,46 @@ Get the list of users that are offline, online, and playing
     online = [i['name'] for i in data if 'online' in i.keys()]
     playing = [i['name'] for i in data if 'playing' in i.keys()]
 
+|
 
-Download all the games of a user
+**Download all the games of a user**
 
 ::
 
-    myclient = lichess.Client()
+    import lichess
 
-    games = myclient.export_by_user(<USERNAME GOES HERE>)
+    myclient = lichess.Client()
+    games = myclient.export_by_user("penguingim1")
 
     with open("games.pgn", "w") as f:
         f.write(games)
     f.close()
 
+|
 
-Get the list of all the members of a team
-
-::
-
-    API_KEY = "<YOUR API KEY GOES HERE>"
-    myclient = lichess.Client(token=API_KEY)
-
-    members = myclient.get_team_members(<TEAMNAME GOES HERE>)
-
-
-Get the list of all the IDs of the puzzles you have failed
+**Get the list of all the members of a team**
 
 ::
 
+    import lichess
+
     API_KEY = "<YOUR API KEY GOES HERE>"
     myclient = lichess.Client(token=API_KEY)
+    members = myclient.get_team_members("vu-chess-club")
 
+|
+
+**Get the list of all the IDs of the puzzles you have failed**
+
+::
+
+    import lichess
+
+    API_KEY = "<YOUR API KEY GOES HERE>"
+    myclient = lichess.Client(token=API_KEY)
     activity = myclient.get_puzzle_activity()
     failed = [i['id'] for i in activity if not i['win']]
 
-|
 
 For more examples, check the examples directory in the source code.
 

@@ -3,6 +3,10 @@
 lichess: a Python wrapper for the Lichess API
 =============================================
 
+.. image:: https://img.shields.io/readthedocs/lichess
+   :target: https://lichess-api.readthedocs.io
+   :alt: Docs
+
 .. image:: https://img.shields.io/pypi/l/lichess?label=license
    :alt: License
 
@@ -29,6 +33,7 @@ lichess_ is a Python library for interacting with the `Lichess API <https://lich
 
 The package is open source, and its code is available on `GitHub <https://github.com/qe/lichess>`_ under the MIT license.
 
+|
 
 Installation
 ------------
@@ -55,6 +60,7 @@ Or, if you already have it, upgrade to the latest version with:
 
     pip install lichess -U
 
+|
 
 Usage
 -----
@@ -84,11 +90,98 @@ Here is an example of using lichess_ **with** a personal access token:
     API_KEY = "<YOUR API KEY GOES HERE>"
     myclient = lichess.Client(token=API_KEY)
 
-Usage
------
+|
+
+Quick Examples
+--------------
+The following are some examples of popular uses of this package:
+
+|
+
+**Get the profile data of a user**
+
+.. code-block:: python
+
+    import lichess
+
+    myclient = lichess.Client()
+    user = myclient.get_data("bmartin")
+
+|
+
+**Get the rating history of a user**
+
+.. code-block:: python
+
+    import lichess
+
+    myclient = lichess.Client()
+    history = myclient.get_rating_history("agadmator")
+
+|
+
+**Get the list of users that are offline, online, and playing**
+
+.. code-block:: python
+
+    import lichess
+
+    myclient = lichess.Client()
+    users = ["Oliver_Penrose", "bmartin", "ismodes", "penguingim1", "Zhigalko_Sergei"]
+    data = myclient.get_status(users)
+
+    offline = [i['name'] for i in data if 'online' not in i.keys()]
+    online = [i['name'] for i in data if 'online' in i.keys()]
+    playing = [i['name'] for i in data if 'playing' in i.keys()]
+
+|
+
+**Download all the games of a user**
+
+.. code-block:: python
+
+    import lichess
+
+    myclient = lichess.Client()
+    games = myclient.export_by_user("penguingim1")
+
+    with open("games.pgn", "w") as f:
+        f.write(games)
+    f.close()
+
+|
+
+**Get the list of all the members of a team**
+
+.. code-block:: python
+
+    import lichess
+
+    API_KEY = "<YOUR API KEY GOES HERE>"
+    myclient = lichess.Client(token=API_KEY)
+    members = myclient.get_team_members("vu-chess-club")
+
+|
+
+**Get the list of all the IDs of the puzzles you have failed**
+
+.. code-block:: python
+
+    import lichess
+
+    API_KEY = "<YOUR API KEY GOES HERE>"
+    myclient = lichess.Client(token=API_KEY)
+    activity = myclient.get_puzzle_activity()
+    failed = [i['id'] for i in activity if not i['win']]
+
+For more examples, check the examples directory in the source code.
+
+|
+
+Method Categories
+=================
 
 .. toctree::
-   :caption: Lichess Python API
    :maxdepth: 2
 
    source/account.rst
@@ -102,6 +195,8 @@ Usage
    source/swiss.rst
    source/simuls.rst
    source/studies.rst
+
+|
 
 Indices and tables
 ==================
