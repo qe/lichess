@@ -125,9 +125,9 @@ class Client:
         }
         return self.request(path=endpoint, payload=payload)
 
-    """
-    Create function in utils.py to manually parse these two responses (JSON problems)
-    """
+    # """
+    # Create function in utils.py to manually parse these two responses (JSON problems)
+    # """
     # def get_top_ten(self):
     #     """Get the top 10 players for each speed and variant
     #
@@ -474,9 +474,9 @@ class Client:
         endpoint = "api/tv/channels"
         return self.request(path=endpoint)
 
-    """
-    ndjson
-    """
+    # """
+    # ndjson
+    # """
     # def stream_tv_game(self):
     #     """Stream positions and moves of the current TV game
 
