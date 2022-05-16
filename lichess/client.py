@@ -598,7 +598,7 @@ class Client:
     def get_teams_player(self, user):
         """Get all the teams a player is a member of
 
-        :param str user:
+        :param str user: User to query their team memberships
         :return: A list with dictionaries containing the teams a player is a member of
         :rtype: list
         """
@@ -664,7 +664,7 @@ class Client:
     def get_arena_info(self, tournament_id, page=1):
         """Get info about an Arena tournament
 
-        :param str tournament_id: ID of arena torunament to query
+        :param str tournament_id: ID of Arena tournament to query
         :param Optional[int] page:
         :return: A dictionary with the info about the queried Arena tournament
         :rtype: dict
@@ -674,10 +674,10 @@ class Client:
         payload = {"page": page, }
         return self.request(path=path, payload=payload)
 
-    def export_by_arena(self, tournament_id):
+    def export_arena_games(self, tournament_id):
         """Export games of an Arena tournament
         
-        :param str tournament_id: ID of arena torunament to query
+        :param str tournament_id: ID of Arena tournament to query
         :return: A string with PGN data of the Arena tournament's games
         :rtype: str
         """
@@ -688,7 +688,7 @@ class Client:
     def get_arena_results(self, tournament_id, max_players=None):
         """Get results of an Arena tournament
         
-        :param str tournament_id: ID of arena torunament to query
+        :param str tournament_id: ID of Arena tournament to query
         :param Optional[int] max_players: Maximum number of players to fetch
         :return: A list with dictionaries of Arena tournament players, with their score and performance, sorted by rank (best first)
         :rtype: list
@@ -701,23 +701,78 @@ class Client:
         else:
             return self.request(path=path, ndjson=True)
 
-    # Get results of an Arena tournament
-    # Get team standing of a team battle
-    # Get tournaments created by a user
-
+    def get_teambattle_info(self, tournament_id):
+        """Get team standing of a team battle
+        
+        :param str tournament_id: ID of arena tournament to query
+        :return: A dictionary with the info about the queried team battle
+        :rtype: dict
+        """
+        endpoint = "api/tournament/{id}/teams"
+        path = endpoint.format(id=tournament_id)
+        return self.request(path=path)
+    
+    def get_arena_createdby(self, user):
+        """Get tournaments created by a user
+        
+        :param str user: User to query their created tournaments
+        :return: A list with dictionaries of all the tournaments created by the user 
+        :rtype: list
+        """
+        endpoint = "api/user/{username}/tournament/created"
+        path = endpoint.format(username=user)
+        return self.request(path=path, ndjson=True)
 
     # -- Swiss Tournaments ----------------------------------------------------
 
     def get_swiss_info(self, tournament_id):
         """Get info about a Swiss tournament
 
-        :param str tournament_id:
+        :param str tournament_id: ID of Swiss tournament to query
         :return: A dictionary with the info about the queried Swiss tournament
         :rtype: dict
         """
         endpoint = "api/swiss/{id}"
         path = endpoint.format(id=tournament_id)
         return self.request(path=path)
+
+    def export_swiss_info(self, tournament_id):
+        """Export the TRF of a Swiss tournament
+        
+        :param str tournament_id: ID of Swiss tournament to query
+        :return: A string with TRF data of the Swiss tournament
+        :rtype: str
+        """
+        endpoint = "swiss/{id}.trf"
+        path = endpoint.format(id=tournament_id)
+        return self.request(path=path, parse=True)
+
+    def export_swiss_games(self, tournament_id):
+        """Export games of a Swiss tournament
+        
+        :param str tournament_id: ID of Swiss tournament to query
+        :return: A string with PGN data of the Swiss tournament's games
+        :rtype: str
+        """
+        endpoint = "api/swiss/{id}/games"
+        path = endpoint.format(id=tournament_id)
+        return self.request(path=path, parse=True)
+    
+    def get_swiss_results(self, tournament_id, max_players=None):
+        """Get results of a Swiss tournament
+        
+        :param str tournament_id: ID of Swiss tournament to query
+        :param Optional[int] max_players: Maximum number of players to fetch
+        :return: A list with dictionaries of Swiss tournament players, with their score and performance, sorted by rank (best first)
+        :rtype: list
+        """
+        endpoint = "api/swiss/{id}/results"
+        path = endpoint.format(id=tournament_id)
+        if max_players:
+            payload = {"nb": max_players, }
+            return self.request(path=path, payload=payload, ndjson=True)
+        else:
+            return self.request(path=path, ndjson=True)
 
     # -- Simuls ---------------------------------------------------------------
 
@@ -731,6 +786,68 @@ class Client:
         return self.request(path=endpoint)
 
     # -- Studies --------------------------------------------------------------
+
+    def export_chapter(self, study_id, chapter_id, clocks=True, comments=True, variations=True):
+        """Export one study chapter
+        
+        :param str study_id: The study ID (8 characters)
+        :param str chapter_id: The chapter ID (8 characters)
+        :param Optional[bool] clocks: When available, include clock comments in the PGN moves
+        :param Optional[bool] comments: When available, include analysis and annotator comments in the PGN moves
+        :param Optional[bool] variations: When available, include non-mainline moves
+        :return: A string with PGN data of one study chapter
+        :rtype: str
+        """
+        endpoint = "study/{studyId}/{chapterId}.pgn"
+        path = endpoint.format(studyId=study_id, chapterId=chapter_id)
+
+        payload = {
+        "clocks": clocks,
+        "comments": comments,
+        "variations": variations,
+        }
+        return self.request(path=path, payload=payload, parse=True)
+    
+    def export_chapters(self, study_id, clocks=True, comments=True, variations=True):
+        """Export all the chapters of a study
+        
+        :param str study_id: The study ID (8 characters)
+        :param Optional[bool] clocks: When available, include clock comments in the PGN moves
+        :param Optional[bool] comments: When available, include analysis and annotator comments in the PGN moves
+        :param Optional[bool] variations: When available, include non-mainline moves
+        :return: A string with PGN data of all the chapters of a study
+        :rtype: str
+        """
+        endpoint = "api/study/{studyId}.pgn"
+        path = endpoint.format(studyId=study_id)
+
+        payload = {
+        "clocks": clocks,
+        "comments": comments,
+        "variations": variations,
+        }
+        return self.request(path=path, payload=payload, parse=True)
+
+    def export_studies(self, user, clocks=True, comments=True, variations=True):
+        """Export all the studies of a user
+        
+        :param str user: The user whose studies to export
+        :param Optional[bool] clocks: When available, include clock comments in the PGN moves
+        :param Optional[bool] comments: When available, include analysis and annotator comments in the PGN moves
+        :param Optional[bool] variations: When available, include non-mainline moves
+        :return: A string with PGN data of all the studies of a user
+        :rtype: str
+        """
+
+        endpoint = "study/by/{username}/export.pgn"
+        path = endpoint.format(username=user)
+        payload = {
+        "clocks": clocks,
+        "comments": comments,
+        "variations": variations,
+        }
+        return self.request(path=path, payload=payload, oauth=True, parse=True)
+
     # -- Messaging ------------------------------------------------------------
     # -- Broadcasts -----------------------------------------------------------
     # -- Analysis -------------------------------------------------------------

@@ -32,6 +32,7 @@ lichess_ is a Python library for interacting with the `Lichess API <https://lich
 
     **This project is still in Pre-Alpha. As a result, it is still unstable, and not all features have been implemented.**
 
+
 |
 
 ============
@@ -91,8 +92,9 @@ Quick Examples
 
 The following are some examples of popular uses of this package:
 
+|
 
-- Get the profile data of a user
+Get the profile data of a user
 
 ::
 
@@ -101,7 +103,7 @@ The following are some examples of popular uses of this package:
     user = myclient.get_data("bmartin")
 
 
-- Get the list of users that are offline, online, and playing
+Get the list of users that are offline, online, and playing
 
 ::
 
@@ -115,7 +117,7 @@ The following are some examples of popular uses of this package:
     playing = [i['name'] for i in data if 'playing' in i.keys()]
 
 
-- Download all the games of a user
+Download all the games of a user
 
 ::
 
@@ -128,7 +130,7 @@ The following are some examples of popular uses of this package:
     f.close()
 
 
-- Get the list of all the members of a team
+Get the list of all the members of a team
 
 ::
 
@@ -138,8 +140,7 @@ The following are some examples of popular uses of this package:
     members = myclient.get_team_members(<TEAMNAME GOES HERE>)
 
 
-
-- Get the list of all the IDs of the puzzles you have failed
+Get the list of all the IDs of the puzzles you have failed
 
 ::
 
@@ -149,6 +150,7 @@ The following are some examples of popular uses of this package:
     activity = myclient.get_puzzle_activity()
     failed = [i['id'] for i in activity if not i['win']]
 
+|
 
 For more examples, check the examples directory in the source code.
 
@@ -278,13 +280,13 @@ Below, the methods with the ``✓`` symbol are working.
         .
         .
         Export games of an Arena tournament
-        ✓   export_by_arena
+        ✓   export_arena_games()
         Get results of an Arena tournament
-        ✓   get_arena_results
-        .
-        .
-        .
-
+        ✓   get_arena_results()
+        Get team standing of a team battle
+        ✓   get_teambattle_info()
+        Get tournaments created by a user
+        ✓   get_arena_createdby()
 
     -- Swiss Tournaments ----------------------------------------------------
         .
@@ -295,12 +297,25 @@ Below, the methods with the ``✓`` symbol are working.
         .
         .
         .
+        Export the TRF of a Swiss tournament
+        ✓   export_swiss_info()
+        Export games of a Swiss tournament
+        ✓   export_swiss_games()
+        Get results of a Swiss tournament
+        ✓   get_swiss_results()
 
     -- Simuls ---------------------------------------------------------------
         Get recently finished, ongoing, and upcoming simuls
         ✓   get_simuls()
 
     -- Studies --------------------------------------------------------------
+        Export one study chapter
+        ✓   export_chapter()
+        Export all the chapters of a study
+        ✓   export_chapters()
+        Export all studies of a user
+        ✓   export_studies()
+
     -- Messaging ------------------------------------------------------------
     -- Broadcasts -----------------------------------------------------------
     -- Analysis -------------------------------------------------------------
