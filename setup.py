@@ -5,14 +5,14 @@ with open("README.rst") as f:
 
 setup(
     name="lichess",
-    version="0.2.2",
+    version="0.2.3",
     description="Python wrapper for the Lichess API",
     long_description=long_description,
     long_description_content_type="text/x-rst",
     url="https://github.com/qe/lichess",
     author="Alex Ismodes",
     author_email="helloemailmerighthere@gmail.com",
-    install_requires=['requests==2.27.1', ],
+    install_requires=["requests>=2.10.0", ],
     license="MIT",
     keywords="lichess chess api python wrapper",
     project_urls={

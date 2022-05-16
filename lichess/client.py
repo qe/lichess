@@ -632,19 +632,19 @@ class Client:
         path = endpoint.format(teamId=team_id)
         return self.request(path=path, ndjson=True)
 
-    """
-    400 Bad Request
-    """
-    def get_join_requests(self, team_id):
-        """Get pending join requests of your team
+    # """
+    # 400 Bad Request
+    # """
+    # def get_join_requests(self, team_id):
+    #     """Get pending join requests of your team
 
-        :param str team_id:
-        :return:
-        :rtype:
-        """
-        endpoint = "api/team/{teamId}/requests"
-        path = endpoint.format(teamId=team_id)
-        return self.request(path=path, oauth=True)
+    #     :param str team_id:
+    #     :return:
+    #     :rtype:
+    #     """
+    #     endpoint = "api/team/{teamId}/requests"
+    #     path = endpoint.format(teamId=team_id)
+    #     return self.request(path=path, oauth=True)
 
     # -- Board ----------------------------------------------------------------
     # -- Bot ------------------------------------------------------------------

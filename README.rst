@@ -103,6 +103,14 @@ Get the profile data of a user
     user = myclient.get_data("bmartin")
 
 
+Get the rating history of a user
+
+::
+    myclient = lichess.Client()
+
+    history = myclient.get_rating_history("agadmator")
+
+
 Get the list of users that are offline, online, and playing
 
 ::
