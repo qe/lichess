@@ -169,14 +169,6 @@ For more examples, check the examples directory in the source code.
 
 |
 
-=========
-Endpoints
-=========
-This GitHub Gist shows the current available methods
-
-
-|
-
 =====
 Links
 =====
