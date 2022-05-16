@@ -21,7 +21,7 @@ copyright = '2022, Alex Ismodes'
 author = 'Alex Ismodes'
 
 # The full version, including alpha/beta/rc tags
-release = '0.2.4'
+release = '0.2.7'
 
 
 # -- General configuration ---------------------------------------------------
