@@ -91,9 +91,9 @@ class Client:
         endpoint = "api/account/kid"
         return self.request(path=endpoint, oauth=True)
 
-    """
-    POST
-    """
+    # """
+    # POST
+    # """
     # def set_kid_mode(self):
     #     """Set your kid mode status
     #
@@ -214,9 +214,9 @@ class Client:
         path = endpoint.format(username=user)
         return self.request(path=path)
 
-    """
-    POST
-    """
+    # """
+    # POST
+    # """
     # def get_by_id(self):
     #     """Get users by ID
     #
@@ -264,9 +264,9 @@ class Client:
         endpoint = "api/rel/following"
         return self.request(path=endpoint, oauth=True, ndjson=True)
 
-    """
-    POST
-    """
+    # """
+    # POST
+    # """
     # def follow(self, player):
     #     """Follow a player
     #
@@ -276,9 +276,9 @@ class Client:
     #     """
     #     pass
 
-    """
-    POST
-    """
+    # """
+    # POST
+    # """
     # def unfollow(self, player):
     #     """Unfollow a player
     #
@@ -400,10 +400,10 @@ class Client:
         }
         return self.request(path=path, payload=payload, parse=True)
 
-    """
-    ndjson
-    POST
-    """
+    # """
+    # ndjson
+    # POST
+    # """
     # def export_by_ids(self):
     #     """
 
@@ -413,10 +413,10 @@ class Client:
     #     endpoint = "api/games/export/_ids"
     #     pass
 
-    """
-    ndjson
-    POST
-    """
+    # """
+    # ndjson
+    # POST
+    # """
     # def stream_among_users(self):
     #     """Stream the games played between users
 
@@ -436,32 +436,32 @@ class Client:
         endpoint = "api/account/playing"
         return self.request(path=endpoint, oauth=True)
 
-    """
-    ndjson
-    """
-    def stream_moves(self, game_id):
-        """Stream the moves/positions of any ongoing game
+    # """
+    # ndjson
+    # """
+    # def stream_moves(self, game_id):
+    #     """Stream the moves/positions of any ongoing game
 
-        :param str game_id: ID of game to stream
-        :return:
-        :rtype:
-        """
-        endpoint = "api/stream/game/{id}"
-        path = endpoint.format(id=game_id)
-        return self.request(path=path, ndjson=True)
+    #     :param str game_id: ID of game to stream
+    #     :return:
+    #     :rtype:
+    #     """
+    #     endpoint = "api/stream/game/{id}"
+    #     path = endpoint.format(id=game_id)
+    #     return self.request(path=path, ndjson=True)
 
-    """
-    POST
-    """
-    def import_by_pgn(self, pgn):
-        """Upload a PGN game
+    # """
+    # POST
+    # """
+    # def import_by_pgn(self, pgn):
+    #     """Upload a PGN game
 
-        :param pgn:
-        :return:
-        :rtype:
-        """
-        endpoint = "api/import"
-        pass
+    #     :param pgn:
+    #     :return:
+    #     :rtype:
+    #     """
+    #     endpoint = "api/import"
+    #     pass
 
     # -- TV -------------------------------------------------------------------
 
