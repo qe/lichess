@@ -58,7 +58,7 @@ Or, if you already have it, upgrade to the latest version with::
 Usage
 =====
 
-`This GitHub Gist <https://gist.github.com/qe/dd9df3a4851a4ffddda9eb72eaa9a9f4>`_ shows the currently available methods since the full documentation is still in development.
+For the full documentation, please check the `Lichess Python API Documentation <https://lichess-api.readthedocs.io/>`_.
 
 Some methods, such as ``Client.get_email()``, require authorization while others, such as ``Client.get_leaderboard()``,
 do not require it. As a result, if you want to use a method/endpoint that does require authorization, you will need to
@@ -176,7 +176,7 @@ This GitHub Gist shows the current available methods
 =====
 Links
 =====
-- `Lichess Python API Currently Available Methods <https://gist.github.com/qe/dd9df3a4851a4ffddda9eb72eaa9a9f4>`_
+- `Lichess Python API Documentation <https://lichess-api.readthedocs.io/>`_
 - `Lichess API Documentation <https://lichess.org/api>`_
 - `Lichess Website <https://lichess.org>`_
 
