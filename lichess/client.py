@@ -1,6 +1,7 @@
-from .enums import *
-from .utils import *
-from .exceptions import *
+from .enums import PerfType, HttpStatusCode
+from .exceptions import ResponseError, APIKeyError
+from .utils import ndjson, valid_input
+
 import logging
 import requests
 import urllib
@@ -12,40 +13,31 @@ VALID_PERF_TYPES = [_.value for _ in PerfType]
 
 class Client:
     def __init__(self, token=None):
-        self.url = "https://lichess.org/"
-        self.s = requests.Session()
+        self._url = "https://lichess.org/"
+        self._s = requests.Session()
         if token:
             self.token = token
 
-    # post_data
-    def request(self, path, payload=None, oauth=False, **kwargs):
-        parsed_url = urllib.parse.urljoin(self.url, path)
+    def _request(self, path, payload=None, oauth=False, **kwargs):
+        parsed_url = urllib.parse.urljoin(self._url, path)
 
         try:
             if oauth:
-                # print("OAUTH status:", oauth)
                 try:
-                    response = self.s.get(parsed_url, headers={"Authorization": f"Bearer {self.token}"}, params=payload)
+                    response = self._s.get(parsed_url, headers={"Authorization": f"Bearer {self.token}"}, params=payload)
                 except AttributeError:
                     raise APIKeyError("Missing API key. Generate one at: https://lichess.org/account/oauth/token")
-                # print("hitting this URL:", response.url)
             else:
-                response = self.s.get(parsed_url, params=payload)
-                # print("hitting this URL:", response.url)
+                response = self._s.get(parsed_url, params=payload)
         except requests.exceptions.RequestException as err:
             logger.error(err)
             raise
-
-        # print(response.content)
-        # print(response.text)
-        # print("response.status_code", response.status_code)
 
         if response.status_code == 200:
             if kwargs.get("parse"):
                 return str(response.text)
             elif kwargs.get("ndjson"):
                 return ndjson(response)
-            # print(type(response.json()))
             return response.json()
         elif response.status_code == 401:
             raise APIKeyError(
@@ -62,7 +54,7 @@ class Client:
         :rtype: dict
         """
         endpoint = "api/account"
-        return self.request(path=endpoint, oauth=True)
+        return self._request(path=endpoint, oauth=True)
 
     def get_email(self):
         """Get your email address
@@ -71,7 +63,7 @@ class Client:
         :rtype: dict
         """
         endpoint = "api/account/email"
-        return self.request(path=endpoint, oauth=True)
+        return self._request(path=endpoint, oauth=True)
 
     def get_preferences(self):
         """Get your preferences
@@ -80,7 +72,7 @@ class Client:
         :rtype: dict
         """
         endpoint = "api/account/preferences"
-        return self.request(path=endpoint, oauth=True)
+        return self._request(path=endpoint, oauth=True)
 
     def get_kid_mode(self):
         """Get your kid mode status
@@ -89,7 +81,7 @@ class Client:
         :rtype: dict
         """
         endpoint = "api/account/kid"
-        return self.request(path=endpoint, oauth=True)
+        return self._request(path=endpoint, oauth=True)
 
     # """
     # POST
@@ -123,7 +115,7 @@ class Client:
             "ids": ','.join(users),
             "withGameIds": with_game_ids,
         }
-        return self.request(path=endpoint, payload=payload)
+        return self._request(path=endpoint, payload=payload)
 
     # """
     # Create function in utils.py to manually parse these two responses (JSON problems)
@@ -134,7 +126,7 @@ class Client:
     #     :return:
     #     """
     #     endpoint = "player"
-    #     return self.request(path=endpoint)
+    #     return self._request(path=endpoint)
     #
     # def get_leaderboard(self, perf_type, num_users):
     #     """Get leaderboard of an individual speed or variant
@@ -150,7 +142,7 @@ class Client:
     #
     #     endpoint = "player/top/{nb}/{perfType}"
     #     path = endpoint.format(nb=num_users, perfType=perf_type)
-    #     return self.request(path=path)
+    #     return self._request(path=path)
 
     def get_data(self, user):
         """Get public data of an individual user
@@ -164,7 +156,7 @@ class Client:
 
         endpoint = "api/user/{username}"
         path = endpoint.format(username=user)
-        return self.request(path=path)
+        return self._request(path=path)
 
     def get_rating_history(self, user):
         """Get rating history of an individual user
@@ -178,7 +170,7 @@ class Client:
 
         endpoint = "api/user/{username}/rating-history"
         path = endpoint.format(username=user)
-        return self.request(path=path)
+        return self._request(path=path)
 
     """
     Possibly add Enum for PerfType (also related to the get_leaderboard() method)
@@ -198,7 +190,7 @@ class Client:
 
         endpoint = "api/user/{username}/perf/{perf}"
         path = endpoint.format(username=user, perf=perf_type)
-        return self.request(path=path)
+        return self._request(path=path)
 
     def get_activity(self, user):
         """Get the activity feed of an individual user
@@ -212,7 +204,7 @@ class Client:
 
         endpoint = "api/user/{username}/activity"
         path = endpoint.format(username=user)
-        return self.request(path=path)
+        return self._request(path=path)
 
     # """
     # POST
@@ -233,7 +225,7 @@ class Client:
         :rtype: list
         """
         endpoint = "streamer/live"
-        return self.request(path=endpoint)
+        return self._request(path=endpoint)
 
     def get_crosstable(self, user1, user2, matchup=False):
         """Get the crosstable of two users
@@ -249,9 +241,9 @@ class Client:
 
         if matchup:
             payload = {"matchup": True,}
-            return self.request(path=path, payload=payload)
+            return self._request(path=path, payload=payload)
         else:
-            return self.request(path=path)
+            return self._request(path=path)
 
     # -- Relations ------------------------------------------------------------
 
@@ -262,7 +254,7 @@ class Client:
         :rtype: list
         """
         endpoint = "api/rel/following"
-        return self.request(path=endpoint, oauth=True, ndjson=True)
+        return self._request(path=endpoint, oauth=True, ndjson=True)
 
     # """
     # POST
@@ -318,7 +310,7 @@ class Client:
             "literate": literate,
             "players": players,
         }
-        return self.request(path=path, payload=payload, parse=True, game_id=game_id)
+        return self._request(path=path, payload=payload, parse=True, game_id=game_id)
 
     def export_ongoing_by_user(self, user, moves=True, pgn_in_json=False, tags=True, clocks=True, evals=True, opening=True, literate=False, players=None):
         """Export the ongoing game of a user
@@ -348,7 +340,7 @@ class Client:
             "literate": literate,
             "players": players,
         }
-        return self.request(path=path, payload=payload, parse=True)
+        return self._request(path=path, payload=payload, parse=True)
 
     def export_by_user(self, user, since=None, until=None, max_games=None, vs=None, rated=None, perf_type=None, color=None, analyzed=None, moves=True, pgn_in_json=False, tags=True, clocks=True, evals=True, opening=True, ongoing=False, finished=True, players=None, sort="dateDesc"):
         """Export all the games of a user
@@ -398,7 +390,7 @@ class Client:
             "players": players,
             "sort": sort,
         }
-        return self.request(path=path, payload=payload, parse=True)
+        return self._request(path=path, payload=payload, parse=True)
 
     # """
     # ndjson
@@ -434,7 +426,7 @@ class Client:
         :rtype: dict
         """
         endpoint = "api/account/playing"
-        return self.request(path=endpoint, oauth=True)
+        return self._request(path=endpoint, oauth=True)
 
     # """
     # ndjson
@@ -448,7 +440,7 @@ class Client:
     #     """
     #     endpoint = "api/stream/game/{id}"
     #     path = endpoint.format(id=game_id)
-    #     return self.request(path=path, ndjson=True)
+    #     return self._request(path=path, ndjson=True)
 
     # """
     # POST
@@ -472,7 +464,7 @@ class Client:
         :rtype: dict
         """
         endpoint = "api/tv/channels"
-        return self.request(path=endpoint)
+        return self._request(path=endpoint)
 
     # """
     # ndjson
@@ -484,7 +476,7 @@ class Client:
     #     :rtype:
     #     """
     #     endpoint = "api/tv/feed"
-    #     return self.request(path=endpoint, ndjson=True)
+    #     return self._request(path=endpoint, ndjson=True)
 
     def get_games_channel(self, channel, num_games=10, moves=True, pgn_in_json=False, tags=True, clocks=True, opening=True):
         """Get the best games currently being played for a specific speed/variant, including computer games and bot games
@@ -510,7 +502,7 @@ class Client:
             "clocks": clocks,
             "opening": opening,
         }
-        return self.request(path=path, payload=payload, parse=True)
+        return self._request(path=path, payload=payload, parse=True)
 
     # -- Puzzles --------------------------------------------------------------
 
@@ -521,7 +513,7 @@ class Client:
         :rtype: dict
         """
         endpoint = "api/puzzle/daily"
-        return self.request(path=endpoint)
+        return self._request(path=endpoint)
 
     def get_puzzle_activity(self, max_entries=None):
         """Get your puzzle activity
@@ -532,7 +524,7 @@ class Client:
         """
         endpoint = "api/puzzle/activity"
         payload = {"max": max_entries,}
-        return self.request(path=endpoint, payload=payload, oauth=True, ndjson=True)
+        return self._request(path=endpoint, payload=payload, oauth=True, ndjson=True)
 
     def get_puzzle_dashboard(self, days):
         """Get your puzzle dashboard
@@ -543,7 +535,7 @@ class Client:
         """
         endpoint = "api/puzzle/dashboard/{days}"
         path = endpoint.format(days=days)
-        return self.request(path=path, oauth=True)
+        return self._request(path=path, oauth=True)
 
     def get_storm_dashboard(self, user, days=30):
         """Get the storm dashboard of a player
@@ -556,7 +548,7 @@ class Client:
         endpoint = "api/storm/dashboard/{username}"
         path = endpoint.format(username=user)
         payload = {"days": days, }
-        return self.request(path=path, payload=payload)
+        return self._request(path=path, payload=payload)
 
     # -- Teams ----------------------------------------------------------------
 
@@ -571,7 +563,7 @@ class Client:
         endpoint = "api/team/{teamId}/swiss"
         path = endpoint.format(teamId=team_id)
         payload = {"max": max_tournaments, }
-        return self.request(path=path, payload=payload, ndjson=True)
+        return self._request(path=path, payload=payload, ndjson=True)
 
     def get_team_info(self, team_id):
         """Get info about a team
@@ -582,7 +574,7 @@ class Client:
         """
         endpoint = "api/team/{teamId}"
         path = endpoint.format(teamId=team_id)
-        return self.request(path=path)
+        return self._request(path=path)
 
     def get_popular_teams(self, page=1):
         """Get popular teams
@@ -593,7 +585,7 @@ class Client:
         """
         endpoint = "api/team/all"
         payload = {"page": page, }
-        return self.request(path=endpoint, payload=payload)
+        return self._request(path=endpoint, payload=payload)
 
     def get_teams_player(self, user):
         """Get all the teams a player is a member of
@@ -604,7 +596,7 @@ class Client:
         """
         endpoint = "api/team/of/{username}"
         path = endpoint.format(username=user)
-        return self.request(path=path)
+        return self._request(path=path)
 
     def search_teams(self, text, page=1):
         """Get search results for keyword in team search
@@ -619,7 +611,7 @@ class Client:
             "text": text,
             "page": page,
         }
-        return self.request(path=endpoint, payload=payload)
+        return self._request(path=endpoint, payload=payload)
 
     def get_team_members(self, team_id):
         """Get members of a team
@@ -630,7 +622,7 @@ class Client:
         """
         endpoint = "api/team/{teamId}/users"
         path = endpoint.format(teamId=team_id)
-        return self.request(path=path, ndjson=True)
+        return self._request(path=path, ndjson=True)
 
     # """
     # 400 Bad Request
@@ -644,7 +636,7 @@ class Client:
     #     """
     #     endpoint = "api/team/{teamId}/requests"
     #     path = endpoint.format(teamId=team_id)
-    #     return self.request(path=path, oauth=True)
+    #     return self._request(path=path, oauth=True)
 
     # -- Board ----------------------------------------------------------------
     # -- Bot ------------------------------------------------------------------
@@ -659,7 +651,7 @@ class Client:
         :rtype: dict
         """
         endpoint = "api/tournament"
-        return self.request(path=endpoint)
+        return self._request(path=endpoint)
 
     def get_arena_info(self, tournament_id, page=1):
         """Get info about an Arena tournament
@@ -672,7 +664,7 @@ class Client:
         endpoint = "api/tournament/{id}"
         path = endpoint.format(id=tournament_id)
         payload = {"page": page, }
-        return self.request(path=path, payload=payload)
+        return self._request(path=path, payload=payload)
 
     def export_arena_games(self, tournament_id):
         """Export games of an Arena tournament
@@ -683,7 +675,7 @@ class Client:
         """
         endpoint = "api/tournament/{id}/games"
         path = endpoint.format(id=tournament_id)
-        return self.request(path=path, parse=True)
+        return self._request(path=path, parse=True)
 
     def get_arena_results(self, tournament_id, max_players=None):
         """Get results of an Arena tournament
@@ -697,9 +689,9 @@ class Client:
         path = endpoint.format(id=tournament_id)
         if max_players:
             payload = {"nb": max_players, }
-            return self.request(path=path, payload=payload, ndjson=True)
+            return self._request(path=path, payload=payload, ndjson=True)
         else:
-            return self.request(path=path, ndjson=True)
+            return self._request(path=path, ndjson=True)
 
     def get_teambattle_info(self, tournament_id):
         """Get team standing of a team battle
@@ -710,7 +702,7 @@ class Client:
         """
         endpoint = "api/tournament/{id}/teams"
         path = endpoint.format(id=tournament_id)
-        return self.request(path=path)
+        return self._request(path=path)
     
     def get_arena_createdby(self, user):
         """Get tournaments created by a user
@@ -721,7 +713,7 @@ class Client:
         """
         endpoint = "api/user/{username}/tournament/created"
         path = endpoint.format(username=user)
-        return self.request(path=path, ndjson=True)
+        return self._request(path=path, ndjson=True)
 
     # -- Swiss Tournaments ----------------------------------------------------
 
@@ -734,7 +726,7 @@ class Client:
         """
         endpoint = "api/swiss/{id}"
         path = endpoint.format(id=tournament_id)
-        return self.request(path=path)
+        return self._request(path=path)
 
     def export_swiss_info(self, tournament_id):
         """Export the TRF of a Swiss tournament
@@ -745,7 +737,7 @@ class Client:
         """
         endpoint = "swiss/{id}.trf"
         path = endpoint.format(id=tournament_id)
-        return self.request(path=path, parse=True)
+        return self._request(path=path, parse=True)
 
     def export_swiss_games(self, tournament_id):
         """Export games of a Swiss tournament
@@ -756,7 +748,7 @@ class Client:
         """
         endpoint = "api/swiss/{id}/games"
         path = endpoint.format(id=tournament_id)
-        return self.request(path=path, parse=True)
+        return self._request(path=path, parse=True)
     
     def get_swiss_results(self, tournament_id, max_players=None):
         """Get results of a Swiss tournament
@@ -770,9 +762,9 @@ class Client:
         path = endpoint.format(id=tournament_id)
         if max_players:
             payload = {"nb": max_players, }
-            return self.request(path=path, payload=payload, ndjson=True)
+            return self._request(path=path, payload=payload, ndjson=True)
         else:
-            return self.request(path=path, ndjson=True)
+            return self._request(path=path, ndjson=True)
 
     # -- Simuls ---------------------------------------------------------------
 
@@ -783,7 +775,7 @@ class Client:
         :rtype: dict
         """
         endpoint = "api/simul"
-        return self.request(path=endpoint)
+        return self._request(path=endpoint)
 
     # -- Studies --------------------------------------------------------------
 
@@ -806,7 +798,7 @@ class Client:
         "comments": comments,
         "variations": variations,
         }
-        return self.request(path=path, payload=payload, parse=True)
+        return self._request(path=path, payload=payload, parse=True)
     
     def export_chapters(self, study_id, clocks=True, comments=True, variations=True):
         """Export all the chapters of a study
@@ -826,7 +818,7 @@ class Client:
         "comments": comments,
         "variations": variations,
         }
-        return self.request(path=path, payload=payload, parse=True)
+        return self._request(path=path, payload=payload, parse=True)
 
     def export_studies(self, user, clocks=True, comments=True, variations=True):
         """Export all the studies of a user
@@ -846,7 +838,7 @@ class Client:
         "comments": comments,
         "variations": variations,
         }
-        return self.request(path=path, payload=payload, oauth=True, parse=True)
+        return self._request(path=path, payload=payload, oauth=True, parse=True)
 
     # -- Messaging ------------------------------------------------------------
     # -- Broadcasts -----------------------------------------------------------

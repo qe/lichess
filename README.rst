@@ -9,7 +9,7 @@
 lichess: a Python wrapper for the Lichess API
 =============================================
 
-.. image:: https://img.shields.io/readthedocs/lichess
+.. image:: https://img.shields.io/readthedocs/lichess-api
    :target: https://lichess-api.readthedocs.io
    :alt: Docs
 
